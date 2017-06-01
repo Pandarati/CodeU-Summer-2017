@@ -47,4 +47,9 @@ public final class Context {
     }
     return users;
   }
+
+  //Creating a basic context with no information: users, conversations or messages
+  public Info getInfo(){
+      return view.getInfo();
+  }
 }

@@ -136,4 +136,34 @@ final class View implements BasicView {
 
     return messages;
   }
+
+    /**Gets the Server Information
+     *
+     * Based on rquest and response time.
+     *
+     * @return null
+     */
+  public ServerInfo getInfo(){
+    try(final Connection connection = source.connection()){
+        Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
+        if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE){
+            final Time startTime = Time.SPECIALIZER.read(connection.in());
+            return new ServerInfo(startTime);
+        }
+        //There was a problem with forming the connection
+        else {
+            // Communicate this error - The server didn't respond with the connection we wanted.
+            System.out.println("The connections don't match!");
+        }
+    }
+    catch (Exception exception){
+        // Communicate this error - There was a problem with forming the connection!
+        Systemout.println("There was a problem with forming the connection!");
+    }
+
+
+    //Coomunicate this error - Something went wrong, and this shouldn't be returning!
+    return null;
+  }
+
 }

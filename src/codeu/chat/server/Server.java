@@ -64,6 +64,9 @@ public final class Server {
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
 
+  //Creates an instance of ServerInfo that helps keep the Time of when the server started
+  private static final ServerInfo serverTimeInfo = new ServerInfo();
+
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
     this.id = id;
@@ -141,6 +144,15 @@ public final class Server {
         Serializers.INTEGER.write(out, NetworkCode.GET_ALL_CONVERSATIONS_RESPONSE);
         Serializers.collection(ConversationHeader.SERIALIZER).write(out, conversations);
       }
+    });
+
+    // Get Server Request - A client wnats to get all the requst to the server from the back end.
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new command(){
+        @Override
+        public void onMessage(InputStream in, OutputStream io) throws IOException{
+            Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+            Uuid.SERIALIZER.write(out, info.version);
+        }
     });
 
     // Get Conversations By Id - A client wants to get a subset of the converations from

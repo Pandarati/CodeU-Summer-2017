@@ -169,6 +169,7 @@ public final class Chat {
         }
       }
 
+
       // Find the first user with the given name and return a user context
       // for that user. If no user is found, the function will return null.
       private UserContext findUser(String name) {
@@ -178,6 +179,21 @@ public final class Chat {
           }
         }
         return null;
+      }
+    });
+
+    panel.register("info", new Panel.Command(){
+      @Override
+      public void invoke(Scanner args){
+        final ServerInfo info = context.getInfo();
+        if(info == null){
+          // Communicate error to user - the server did not send a valid info object.
+          System.out.println("The server did not send a valid info object.");
+        }
+        else{
+          //THIS NEEDS TO BE UPDATED
+          System.out.println("RUNNNING INFO");
+        }
       }
     });
 
