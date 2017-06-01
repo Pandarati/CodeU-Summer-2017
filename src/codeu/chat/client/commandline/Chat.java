@@ -16,13 +16,18 @@ package codeu.chat.client.commandline;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
+
+import java.io.IOException;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.util.Tokenizer;
 
 public final class Chat {
 
@@ -47,9 +52,22 @@ public final class Chat {
   //
   public boolean handleCommand(String line) {
 
-    final Scanner tokens = new Scanner(line.trim());
+    final List<String> args = new ArrayList<String>();
+    final Tokenizer tokenizer = new Tokenizer(line);
 
-    final String command = tokens.hasNext() ? tokens.next() : "";
+    try {
+      for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
+        args.add(token);
+      }
+    }
+    catch(IOException ex) {
+      System.out.println(ex.getMessage());
+    }
+
+    final String command = args.get(0);
+
+    args.remove(0);
+
 
     // Because "exit" and "back" are applicable to every panel, handle
     // those commands here to avoid having to implement them for each
@@ -66,7 +84,7 @@ public final class Chat {
       return true;
     }
 
-    if (panels.peek().handleCommand(command, tokens)) {
+    if (panels.peek().handleCommand(command, args)) {
       // the command was handled
       return true;
     }
