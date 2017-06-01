@@ -24,6 +24,8 @@ import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 
+import codeu.chat.common.ServerInfo;
+
 public final class Chat {
 
   // PANELS
@@ -181,6 +183,20 @@ public final class Chat {
       }
     });
 
+    //Version Check
+  panel.register("versionInfo", new Panel.Command() {
+  @Override
+  public void invoke(Scanner args) {
+    final ServerInfo info = context.getInfo();
+    if (info == null) {
+      System.out.println("ERROR: the server did not send us a valid info object.");
+    } else {
+      System.out.format("Version: %s\n", info.version);
+
+    }
+  }
+});
+
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
     return panel;
@@ -299,6 +315,9 @@ public final class Chat {
         System.out.format("  Id   : UUID:%s\n", user.user.id);
       }
     });
+
+
+
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
