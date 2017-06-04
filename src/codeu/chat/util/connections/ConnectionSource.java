@@ -17,6 +17,7 @@ package codeu.chat.util.connections;
 import java.io.Closeable;
 import java.io.IOException;
 
+
 public interface ConnectionSource extends Closeable {
 
   Connection connect() throws IOException;

@@ -21,7 +21,9 @@ import java.util.Collection;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
+import codeu.chat.util.ServerInfo;
 import codeu.chat.util.connections.ConnectionSource;
+
 
 public final class Context {
 
@@ -49,7 +51,7 @@ public final class Context {
   }
 
   //Creating a basic context with no information: users, conversations or messages
-  public Info getInfo(){
+  public ServerInfo getInfo(){
       return view.getInfo();
   }
 }

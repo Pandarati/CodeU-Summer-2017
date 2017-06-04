@@ -37,6 +37,8 @@ import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Timeline;
+import codeu.chat.util.ServerInfo;
+import codeu.chat.util.Uuid;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 
@@ -146,12 +148,12 @@ public final class Server {
       }
     });
 
-    // Get Server Request - A client wnats to get all the requst to the server from the back end.
-    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new command(){
+    // Get Server Request - A client whats to get all the request to the server from the back end.
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command(){
         @Override
-        public void onMessage(InputStream in, OutputStream io) throws IOException{
+        public void onMessage(InputStream in, OutputStream out) throws IOException{
             Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
-            Uuid.SERIALIZER.write(out, info.version);
+            Uuid.SERIALIZER.write(out, serverTimeInfo.version);
         }
     });
 

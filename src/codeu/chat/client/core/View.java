@@ -27,6 +27,7 @@ import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
+import codeu.chat.util.ServerInfo;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
@@ -139,15 +140,15 @@ final class View implements BasicView {
 
     /**Gets the Server Information
      *
-     * Based on rquest and response time.
+     * Based on request and response time.
      *
      * @return null
      */
   public ServerInfo getInfo(){
-    try(final Connection connection = source.connection()){
+    try(final Connection connection = source.connect()){
         Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
         if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE){
-            final Time startTime = Time.SPECIALIZER.read(connection.in());
+            final Time startTime = Time.SERIALIZER.read(connection.in());
             return new ServerInfo(startTime);
         }
         //There was a problem with forming the connection
@@ -158,7 +159,7 @@ final class View implements BasicView {
     }
     catch (Exception exception){
         // Communicate this error - There was a problem with forming the connection!
-        Systemout.println("There was a problem with forming the connection!");
+        System.out.println("There was a problem with forming the connection!");
     }
 
 

@@ -23,6 +23,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.util.ServerInfo;
 
 public final class Chat {
 
@@ -182,6 +183,9 @@ public final class Chat {
       }
     });
 
+      /**
+       * Command line command that will use the context that was created
+       */
     panel.register("info", new Panel.Command(){
       @Override
       public void invoke(Scanner args){
