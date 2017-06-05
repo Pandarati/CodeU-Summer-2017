@@ -27,6 +27,8 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.NetworkCode;
+import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Tokenizer;
 
 public final class Chat {
@@ -162,6 +164,19 @@ public final class Chat {
           }
         } else {
           System.out.println("ERROR: Missing <username>");
+        }
+      }
+    });
+
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(Scanner args) {
+        final ServerInfo info = context.getInfo();
+        if (info == null) {
+          System.out.println("ERROR: Invalid information");
+        } else {
+          System.out.println("Server info: version: " + NetworkCode.SERVER_INFO_RESPONSE + " start time: " + info.startTime.toString());
+          // Print the server info to the user in a pretty way
         }
       }
     });

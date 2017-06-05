@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="04ec3486-153f-408e-8dd5-c3e468f14428" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/codeu/chat/client/commandline/Chat.java" afterPath="$PROJECT_DIR$/src/codeu/chat/client/commandline/Chat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/codeu/chat/client/commandline/Panel.java" afterPath="$PROJECT_DIR$/src/codeu/chat/client/commandline/Panel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/codeu/chat/TestRunner.java" afterPath="$PROJECT_DIR$/test/codeu/chat/TestRunner.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -52,35 +50,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Tokenizer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Tokenizer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-316">
-              <caret line="12" column="40" lean-forward="false" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
-              <folding>
-                <element signature="e#799#800#0" expanded="true" />
-                <element signature="e#842#843#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TokenizerTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/codeu/chat/util/TokenizerTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="69" lean-forward="false" selection-start-line="20" selection-start-column="69" selection-end-line="20" selection-end-column="69" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Panel.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/codeu/chat/client/commandline/Panel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
+            <state relative-caret-position="404">
               <caret line="46" column="48" lean-forward="false" selection-start-line="46" selection-start-column="48" selection-end-line="46" selection-end-column="48" />
               <folding>
                 <element signature="e#0#1919#0" expanded="true" />
@@ -100,6 +73,55 @@
               <folding>
                 <element signature="e#0#14028#0" expanded="true" />
                 <element signature="imports" expanded="true" />
+                <marker date="1496358379000" expanded="true" signature="2720:3051" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="2789:2976" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="3532:6623" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="3577:3730" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="3778:4316" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="3835:4310" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="4324:4486" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="4536:4803" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="4593:4797" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="4811:4959" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="5008:5399" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="5065:5393" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="5407:5555" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="5608:6491" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="5665:6102" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="6303:6485" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="6499:6601" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="6681:10842" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="6726:6890" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="6938:7772" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="6995:7766" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="7780:7941" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="7991:8317" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="8048:8311" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="8325:8493" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="8542:9082" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="8599:9076" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="9090:9247" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="9297:10268" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="9354:9829" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="10036:10262" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="10276:10425" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="10473:10710" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="10530:10704" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="10718:10820" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="10924:14025" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="10969:11135" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="11183:11877" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="11240:11871" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="11885:12065" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="12115:12776" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="12172:12770" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="12784:12959" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="13008:13324" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="13065:13318" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="13332:13487" ph="//..." />
+                <marker date="1496358379000" expanded="true" signature="13535:13893" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="13592:13887" ph="{...}" />
+                <marker date="1496358379000" expanded="true" signature="13901:14003" ph="//..." />
               </folding>
             </state>
           </provider>
@@ -782,17 +804,326 @@
     <entry file="file://$PROJECT_DIR$/src/codeu/chat/client/commandline/Chat.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3822">
-          <caret line="119" column="35" lean-forward="false" selection-start-line="119" selection-start-column="35" selection-end-line="119" selection-end-column="35" />
+          <caret line="101" column="35" lean-forward="false" selection-start-line="101" selection-start-column="35" selection-end-line="101" selection-end-column="35" />
           <folding>
             <element signature="e#0#14028#0" expanded="true" />
             <element signature="imports" expanded="true" />
+            <marker date="1496358379000" expanded="true" signature="2720:3051" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="2789:2976" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="3532:6623" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="3577:3730" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="3778:4316" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="3835:4310" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="4324:4486" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="4536:4803" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="4593:4797" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="4811:4959" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="5008:5399" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="5065:5393" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="5407:5555" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="5608:6491" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="5665:6102" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6303:6485" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6499:6601" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="6681:10842" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6726:6890" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="6938:7772" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6995:7766" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="7780:7941" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="7991:8317" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="8048:8311" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="8325:8493" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="8542:9082" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="8599:9076" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="9090:9247" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="9297:10268" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="9354:9829" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10036:10262" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10276:10425" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="10473:10710" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10530:10704" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10718:10820" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="10924:14025" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10969:11135" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="11183:11877" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="11240:11871" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="11885:12065" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="12115:12776" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="12172:12770" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="12784:12959" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="13008:13324" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13065:13318" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13332:13487" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="13535:13893" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13592:13887" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13901:14003" ph="//..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/codeu/chat/client/commandline/Panel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
+        <state relative-caret-position="389">
+          <caret line="45" column="48" lean-forward="false" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#1919#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1248#1249#0" expanded="true" />
+            <element signature="e#1292#1293#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Serializers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#4246#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Uuid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#5750#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2921#2922#0" expanded="false" />
+            <element signature="e#2942#2943#0" expanded="false" />
+            <element signature="e#2963#2964#0" expanded="false" />
+            <element signature="e#2982#2983#0" expanded="false" />
+            <element signature="e#3035#3036#0" expanded="false" />
+            <element signature="e#3103#3104#0" expanded="false" />
+            <element signature="e#3205#3206#0" expanded="false" />
+            <element signature="e#3236#3237#0" expanded="false" />
+            <element signature="e#3367#3368#0" expanded="false" />
+            <element signature="e#3410#3411#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/codeu/chat/util/TokenizerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="23" column="8" lean-forward="true" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/codeu/chat/TestRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#1443#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Tokenizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+          <folding>
+            <element signature="e#799#800#0" expanded="true" />
+            <element signature="e#842#843#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Serializers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#4246#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Uuid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#5750#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2921#2922#0" expanded="false" />
+            <element signature="e#2942#2943#0" expanded="false" />
+            <element signature="e#2963#2964#0" expanded="false" />
+            <element signature="e#2982#2983#0" expanded="false" />
+            <element signature="e#3035#3036#0" expanded="false" />
+            <element signature="e#3103#3104#0" expanded="false" />
+            <element signature="e#3205#3206#0" expanded="false" />
+            <element signature="e#3236#3237#0" expanded="false" />
+            <element signature="e#3367#3368#0" expanded="false" />
+            <element signature="e#3410#3411#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Serializers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#4246#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Uuid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#5750#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2921#2922#0" expanded="false" />
+            <element signature="e#2942#2943#0" expanded="false" />
+            <element signature="e#2963#2964#0" expanded="false" />
+            <element signature="e#2982#2983#0" expanded="false" />
+            <element signature="e#3035#3036#0" expanded="false" />
+            <element signature="e#3103#3104#0" expanded="false" />
+            <element signature="e#3205#3206#0" expanded="false" />
+            <element signature="e#3236#3237#0" expanded="false" />
+            <element signature="e#3367#3368#0" expanded="false" />
+            <element signature="e#3410#3411#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Timeline.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1983">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/codeu/chat/TestRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#1443#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/server/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1204">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#5172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/server/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-300">
+          <caret line="227" column="9" lean-forward="false" selection-start-line="227" selection-start-column="9" selection-end-line="227" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/codeu/chat/util/TokenizerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="69" lean-forward="false" selection-start-line="20" selection-start-column="69" selection-end-line="20" selection-end-column="69" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/util/Tokenizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-316">
+          <caret line="12" column="40" lean-forward="false" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
+          <folding>
+            <element signature="e#799#800#0" expanded="true" />
+            <element signature="e#842#843#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/client/commandline/Chat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3822">
+          <caret line="119" column="35" lean-forward="false" selection-start-line="119" selection-start-column="35" selection-end-line="119" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#14028#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <marker date="1496358379000" expanded="true" signature="2720:3051" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="2789:2976" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="3532:6623" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="3577:3730" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="3778:4316" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="3835:4310" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="4324:4486" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="4536:4803" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="4593:4797" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="4811:4959" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="5008:5399" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="5065:5393" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="5407:5555" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="5608:6491" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="5665:6102" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6303:6485" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6499:6601" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="6681:10842" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6726:6890" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="6938:7772" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="6995:7766" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="7780:7941" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="7991:8317" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="8048:8311" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="8325:8493" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="8542:9082" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="8599:9076" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="9090:9247" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="9297:10268" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="9354:9829" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10036:10262" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10276:10425" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="10473:10710" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10530:10704" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10718:10820" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="10924:14025" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="10969:11135" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="11183:11877" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="11240:11871" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="11885:12065" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="12115:12776" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="12172:12770" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="12784:12959" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="13008:13324" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13065:13318" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13332:13487" ph="//..." />
+            <marker date="1496358379000" expanded="true" signature="13535:13893" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13592:13887" ph="{...}" />
+            <marker date="1496358379000" expanded="true" signature="13901:14003" ph="//..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/codeu/chat/client/commandline/Panel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
           <caret line="46" column="48" lean-forward="false" selection-start-line="46" selection-start-column="48" selection-end-line="46" selection-end-column="48" />
           <folding>
             <element signature="e#0#1919#0" expanded="true" />

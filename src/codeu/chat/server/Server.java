@@ -32,6 +32,7 @@ import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
+import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
@@ -51,6 +52,8 @@ public final class Server {
   private static final int RELAY_REFRESH_MS = 5000;  // 5 seconds
 
   private final Timeline timeline = new Timeline();
+
+  private static final ServerInfo info = new ServerInfo();
 
   private final Map<Integer, Command> commands = new HashMap<>();
 
@@ -172,6 +175,15 @@ public final class Server {
       }
     });
 
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+        Uuid.SERIALIZER.write(out, info.version);
+      }
+    });
+
     this.timeline.scheduleNow(new Runnable() {
       @Override
       public void run() {
@@ -187,7 +199,6 @@ public final class Server {
         } catch (Exception ex) {
 
           LOG.error(ex, "Failed to read update from relay.");
-
         }
 
         timeline.scheduleIn(RELAY_REFRESH_MS, this);
