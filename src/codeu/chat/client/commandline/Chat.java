@@ -24,7 +24,7 @@ import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 
-import codeu.chat.common.ServerInfo;
+import codeu.chat.common.VersionInfo;
 import codeu.chat.util.Tokenizer;
 import java.io.*;
 import java.util.*;
@@ -200,7 +200,7 @@ args.remove(0);
   panel.register("versionInfo", new Panel.Command() {
   @Override
   public void invoke(List<String> args) {
-    final ServerInfo info = context.getInfo();
+    final VersionInfo info = context.getInfo();
     if (info == null) {
       System.out.println("ERROR: the server did not send us a valid info object.");
     } else {
