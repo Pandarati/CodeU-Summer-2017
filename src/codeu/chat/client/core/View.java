@@ -27,7 +27,7 @@ import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
-import codeu.chat.util.ServerInfo;
+import codeu.chat.util.UptimeServerInfo;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
@@ -144,12 +144,12 @@ final class View implements BasicView {
      *
      * @return null
      */
-  public ServerInfo getInfo(){
+  public UptimeServerInfo getInfo(){
     try(final Connection connection = source.connect()){
         Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
         if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE){
             final Time startTime = Time.SERIALIZER.read(connection.in());
-            return new ServerInfo(startTime);
+            return new UptimeServerInfo(startTime, version);
         }
         //There was a problem with forming the connection
         else {

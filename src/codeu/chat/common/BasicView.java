@@ -16,12 +16,8 @@ package codeu.chat.common;
 
 import java.util.Collection;
 
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Message;
-import codeu.chat.common.User;
+import codeu.chat.util.UptimeServerInfo;
 import codeu.chat.util.Uuid;
-import codeu.chat.util.ServerInfo;
 
 // BASIC VIEW
 //
@@ -56,7 +52,7 @@ public interface BasicView {
   // GET INFO
     //
     // RETURN Creating a basic context with no information: users, conversations or messages
-    public ServerInfo getInfo();
+    public UptimeServerInfo getInfo();
 
 
 

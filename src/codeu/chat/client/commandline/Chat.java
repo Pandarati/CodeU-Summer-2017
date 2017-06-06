@@ -14,8 +14,6 @@
 
 package codeu.chat.client.commandline;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -23,7 +21,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
-import codeu.chat.util.ServerInfo;
+import codeu.chat.util.UptimeServerInfo;
 
 public final class Chat {
 
@@ -189,7 +187,7 @@ public final class Chat {
     panel.register("info", new Panel.Command(){
       @Override
       public void invoke(Scanner args){
-        final ServerInfo info = context.getInfo();
+        final UptimeServerInfo info = context.getInfo();
         if(info == null){
           // Communicate error to user - the server did not send a valid info object.
           System.out.println("The server did not send a valid info object.");
