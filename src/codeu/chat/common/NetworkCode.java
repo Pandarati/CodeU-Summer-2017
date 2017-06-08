@@ -16,8 +16,8 @@ package codeu.chat.common;
 
 public final class NetworkCode {
 
-      public static final int VERSION_INFO_REQUEST = 31;
-      public static final int VERSION_INFO_RESPONSE = 32;
+      public static final int SERVER_INFO_REQUEST = 31;
+      public static final int SERVER_INFO_RESPONSE = 32;
 
   public static final int
       NO_MESSAGE = 0,

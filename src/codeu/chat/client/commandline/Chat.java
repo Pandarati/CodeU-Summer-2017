@@ -55,12 +55,13 @@ public final class Chat {
     final List<String> args = new ArrayList<>();
 final Tokenizer tokenizer = new Tokenizer(line);
 try {
+  // parses line from command line
   for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
     args.add(token);
   }
 }
 catch (IOException e) {
-  System.out.println("ERROR");
+  System.out.println("ERROR: " + e.getMessage());
 }
 
 final String command = args.get(0);

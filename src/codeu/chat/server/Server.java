@@ -33,7 +33,7 @@ import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
-import codeu.chat.common.VersionInfo; //changed from ServerInfo to VersionInfo
+import codeu.chat.common.VersionInfo; 
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -123,10 +123,10 @@ public final class Server {
     });
 
     //Get Version Information
-    this.commands.put(NetworkCode.VERSION_INFO_REQUEST, new Command() {
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
-        Serializers.INTEGER.write(out, NetworkCode.VERSION_INFO_RESPONSE);
+        Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
         Uuid.SERIALIZER.write(out, info.version);
       }
     });

@@ -22,7 +22,7 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.ConnectionSource;
-import codeu.chat.common.VersionInfo; //changed from ServerInfo to VersionInfo
+import codeu.chat.common.VersionInfo;
 
 public final class Context {
 

@@ -23,7 +23,7 @@ import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.User;
-import codeu.chat.common.VersionInfo; //changed from ServerInfo to VersionInfo
+import codeu.chat.common.VersionInfo; 
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -141,8 +141,8 @@ final class View implements BasicView {
 
   public VersionInfo getInfo() {
   try (final Connection connection = this.source.connect()) {
-    Serializers.INTEGER.write(connection.out(), NetworkCode.VERSION_INFO_REQUEST);
-    if (Serializers.INTEGER.read(connection.in()) == NetworkCode.VERSION_INFO_RESPONSE) {
+    Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
+    if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
       final Uuid version = Uuid.SERIALIZER.read(connection.in());
       return new VersionInfo(version);
     } else {

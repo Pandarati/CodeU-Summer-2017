@@ -1,6 +1,6 @@
 package codeu.chat.util;
 
-import java.io.*;
+import java.io.IOException;
 
 public final class Tokenizer {
    private StringBuilder token;
@@ -14,9 +14,9 @@ public final class Tokenizer {
    }
 
    public String next() throws IOException {
-      // Skip all leading whitespace
+      //Skips all of the leading whitespaces that proceeeds the characters.
       while (remaining() > 0 && Character.isWhitespace(peek())) {
-      read();  // ignore the result because we already know that it is a whitespace character
+      read();  // ignore the result and reads because we already know that it is a whitespace character
       }
       if (remaining() <= 0) {
          return null;
@@ -28,6 +28,7 @@ public final class Tokenizer {
 
    }
 
+   //input is tokenized by word when a whitespace is read
    private String readWithNoQuotes() throws IOException {
       token.setLength(0);  // clear the token
       while (remaining() > 0 && !Character.isWhitespace(peek())) {
@@ -36,6 +37,7 @@ public final class Tokenizer {
       return token.toString();
    }
 
+   //input is tokenized by words inside quotations
    private String readWithQuotes() throws IOException {
       token.setLength(0);  // clear the token
       if (read() != '"') {
@@ -49,10 +51,12 @@ public final class Tokenizer {
    }
 
 
+   // determines how much more input we have left to parse
    private int remaining() {
       return source.length() - at;
    }
 
+   // returns what character is currently being parsed
    private char peek() throws IOException {
       if (at < source.length()) {
          return source.charAt(at);
@@ -61,6 +65,8 @@ public final class Tokenizer {
          throw new IOException();
       }
    }
+
+   // reads the current character
    private char read() throws IOException {
       final char c = peek();
       at += 1;
