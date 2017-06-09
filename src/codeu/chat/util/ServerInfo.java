@@ -1,5 +1,8 @@
 package codeu.chat.util;
 
+// why is this class in the util package? Can we combine the two ServerInfo classes in the
+// codeu.chat.common package?
+
 import java.io.IOException;
 
 public final class ServerInfo {
