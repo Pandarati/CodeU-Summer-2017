@@ -17,17 +17,10 @@ package codeu.chat.client.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import codeu.chat.common.BasicView;
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Message;
-import codeu.chat.common.NetworkCode;
-import codeu.chat.common.User;
-import codeu.chat.util.Logger;
-import codeu.chat.util.Serializers;
-import codeu.chat.util.Time;
-import codeu.chat.util.Uuid;
-import codeu.chat.util.UptimeServerInfo;
+import codeu.chat.common.*;
+import codeu.chat.server.Server;
+import codeu.chat.util.*;
+import codeu.chat.util.ServerInfo;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
@@ -142,14 +135,18 @@ final class View implements BasicView {
      *
      * Based on request and response time.
      *
-     * @return null
+     * @return ServerInfo(startTime, version)
      */
-  public UptimeServerInfo getInfo(){
+  public ServerInfo getInfo(){
     try(final Connection connection = source.connect()){
         Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
         if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE){
             final Time startTime = Time.SERIALIZER.read(connection.in());
-            return new UptimeServerInfo(startTime, version);
+            final Uuid version = Uuid.SERIALIZER.read(connection.in());
+
+
+            //Creates a new ServerInfo object with the latest info: startTime and version
+            return new ServerInfo(startTime, version);
         }
         //There was a problem with forming the connection
         else {

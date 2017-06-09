@@ -29,7 +29,6 @@ import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
-import codeu.chat.common.VersionServerInfo;
 import codeu.chat.util.*;
 import codeu.chat.util.connections.Connection;
 
@@ -57,11 +56,8 @@ public final class Server {
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
 
-  //Creates an instance of UptimeServerInfo that helps keep the Time of when the server started
-  private static VersionServerInfo versionServerInfo;
-
-  //Creates an instance of UptimeServerInfo that helps keep the Time of when the server started
-  private static UptimeServerInfo uptimeServerInfo;
+  //Creates an instance of UpTimeServerInfo that helps keep the Time of when the server started
+  private static ServerInfo serverInfo;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
@@ -148,13 +144,17 @@ public final class Server {
         public void onMessage(InputStream in, OutputStream out) throws IOException{
             Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
 
+
             try{
-              versionServerInfo = new VersionServerInfo();
+              serverInfo = new ServerInfo();
             }catch (Exception ex){
-              LOG.error(ex, "There was a problem with parsing the VersionServerInfo.");
+              LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
-            Uuid.SERIALIZER.write(out, versionServerInfo.version);
+
+            //Writes out the ServerInfo Version and StartTime to the user!
+            Uuid.SERIALIZER.write(out, serverInfo.version);
+            Time.SERIALIZER.write(out, view.getInfo().startTime);
         }
     });
 

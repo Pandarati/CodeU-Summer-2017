@@ -16,7 +16,7 @@ package codeu.chat.common;
 
 import java.util.Collection;
 
-import codeu.chat.util.UptimeServerInfo;
+import codeu.chat.util.ServerInfo;
 import codeu.chat.util.Uuid;
 
 // BASIC VIEW
@@ -49,10 +49,7 @@ public interface BasicView {
   //   Return all messages whose id is found in the given collection.
   Collection<Message> getMessages(Collection<Uuid> ids);
 
-  // GET INFO
-    //
-    // RETURN Creating a basic context with no information: users, conversations or messages
-    public UptimeServerInfo getInfo();
+
 
 
 
