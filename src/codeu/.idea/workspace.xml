@@ -41,8 +41,8 @@
       <file leaf-file-name="View.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chat/client/core/View.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="515">
-              <caret line="142" column="26" lean-forward="true" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+            <state relative-caret-position="291">
+              <caret line="142" column="26" lean-forward="false" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
               <folding>
                 <element signature="e#0#5588#0" expanded="true" />
                 <element signature="imports" expanded="true" />
@@ -51,10 +51,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Context.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Panel.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/chat/client/commandline/Panel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="431">
+              <caret line="50" column="4" lean-forward="true" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#1919#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Context.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chat/client/core/Context.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="536">
+            <state relative-caret-position="465">
               <caret line="51" column="15" lean-forward="false" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
               <folding>
                 <element signature="e#0#1611#0" expanded="true" />
@@ -110,8 +122,8 @@
       <file leaf-file-name="ServerInfo.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chat/common/ServerInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="31" />
+            <state relative-caret-position="135">
+              <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -156,8 +168,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -240,7 +251,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -480,7 +492,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -496,7 +507,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24609375" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24609375" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -548,6 +559,93 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/chat/server/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="55" column="37" lean-forward="false" selection-start-line="55" selection-start-column="37" selection-end-line="55" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#10754#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/common/Secret.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#4519#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/client/core/Context.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="51" column="15" lean-forward="false" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#1611#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/common/BasicView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="16" column="7" lean-forward="false" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#1814#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/client/commandline/Chat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="30" column="36" lean-forward="false" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/util/Time.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/common/NetworkCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/common/ServerInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/client/core/View.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1695">
+          <caret line="142" column="26" lean-forward="true" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#5588#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/chat/server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -713,18 +811,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/chat/client/core/Context.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="51" column="15" lean-forward="false" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#1611#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/chat/common/ServerInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="31" />
+        <state relative-caret-position="135">
+          <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chat/client/core/View.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="515">
-          <caret line="142" column="26" lean-forward="true" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+        <state relative-caret-position="291">
+          <caret line="142" column="26" lean-forward="false" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
           <folding>
             <element signature="e#0#5588#0" expanded="true" />
             <element signature="imports" expanded="true" />
@@ -732,13 +841,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/chat/client/core/Context.java">
+    <entry file="file://$PROJECT_DIR$/chat/client/commandline/Panel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
-          <caret line="51" column="15" lean-forward="false" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
+        <state relative-caret-position="431">
+          <caret line="50" column="4" lean-forward="true" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
           <folding>
-            <element signature="e#0#1611#0" expanded="true" />
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#1919#0" expanded="true" />
           </folding>
         </state>
       </provider>

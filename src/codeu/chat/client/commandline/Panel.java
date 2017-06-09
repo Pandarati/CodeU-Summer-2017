@@ -49,6 +49,9 @@ final class Panel {
   // will be returned. True will be return if a command is found. Whether or not
   // the command was successful is not returned.
   //
+
+  // This function takes a command, and a list of Strings to be processed, so we invoke each string as its
+  // own argument, instead of the entire Scanner line as a whole
   public boolean handleCommand(String commandName, List<String> args) {
     final Command command = commands.get(commandName);
     if (command != null) {
