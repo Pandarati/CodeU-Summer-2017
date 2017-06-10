@@ -20,7 +20,7 @@ import java.util.Collection;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.connections.ConnectionSource;
-import codeu.chat.util.ServerInfo;
+import codeu.chat.common.ServerInfo;
 
 
 public final class Context {

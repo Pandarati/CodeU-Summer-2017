@@ -1,7 +1,10 @@
-package codeu.chat.util;
+package codeu.chat.common;
 
 // why is this class in the util package? Can we combine the two ServerInfo classes in the
 // codeu.chat.common package?
+
+import codeu.chat.util.Time;
+import codeu.chat.util.Uuid;
 
 import java.io.IOException;
 

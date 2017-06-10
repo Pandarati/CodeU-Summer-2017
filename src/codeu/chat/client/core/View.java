@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import codeu.chat.common.*;
-import codeu.chat.server.Server;
 import codeu.chat.util.*;
-import codeu.chat.util.ServerInfo;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 

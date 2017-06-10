@@ -16,7 +16,6 @@ package codeu.chat.common;
 
 import java.util.Collection;
 
-import codeu.chat.util.ServerInfo;
 import codeu.chat.util.Uuid;
 
 // BASIC VIEW
