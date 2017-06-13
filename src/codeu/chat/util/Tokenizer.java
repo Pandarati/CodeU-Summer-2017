@@ -3,8 +3,9 @@ package codeu.chat.util;
 import java.io.IOException;
 
 public final class Tokenizer {
+   
+   private final String source;
    private StringBuilder token;
-   private String source;
    private int at;
 
    public Tokenizer(String source) {

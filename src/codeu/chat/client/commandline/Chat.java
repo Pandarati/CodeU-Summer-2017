@@ -26,8 +26,9 @@ import codeu.chat.client.core.UserContext;
 
 import codeu.chat.common.VersionInfo;
 import codeu.chat.util.Tokenizer;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 public final class Chat {
 
@@ -53,19 +54,19 @@ public final class Chat {
   public boolean handleCommand(String line) {
 
     final List<String> args = new ArrayList<>();
-final Tokenizer tokenizer = new Tokenizer(line);
-try {
-  // parses line from command line
-  for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
-    args.add(token);
-  }
-}
-catch (IOException e) {
-  System.out.println("ERROR: " + e.getMessage());
-}
+    final Tokenizer tokenizer = new Tokenizer(line);
+    try {
+    // parses line from command line
+      for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
+      args.add(token);
+      }
+    }
+    catch (IOException e) {
+      System.out.println("ERROR: " + e.getMessage());
+    }
 
-final String command = args.get(0);
-args.remove(0);
+    final String command = args.get(0);
+    args.remove(0);
 
     // Because "exit" and "back" are applicable to every panel, handle
     // those commands here to avoid having to implement them for each

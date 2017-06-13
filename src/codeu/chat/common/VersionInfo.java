@@ -7,9 +7,11 @@ public final class VersionInfo {
   private final static String SERVER_VERSION = "1.0.0";
 
   public final Uuid version;
-  public Uuid temp = null;
-  
+
+
+  // Writes object with server information to server
   public VersionInfo() {
+    Uuid temp = null;
   	try {
   		temp = Uuid.parse(SERVER_VERSION);
     }
@@ -18,6 +20,8 @@ public final class VersionInfo {
     }
     this.version = temp;
   }
+
+  // Client side to read the server information
   public VersionInfo(Uuid version) {
     this.version = version;
   }

@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import java.util.*;
+import java.util.List;
 
 // PANEL
 //
