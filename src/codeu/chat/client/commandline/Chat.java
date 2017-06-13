@@ -14,8 +14,6 @@
 
 package codeu.chat.client.commandline;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -23,6 +21,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.ServerInfo;
 
 public final class Chat {
 
@@ -169,6 +168,7 @@ public final class Chat {
         }
       }
 
+
       // Find the first user with the given name and return a user context
       // for that user. If no user is found, the function will return null.
       private UserContext findUser(String name) {
@@ -178,6 +178,24 @@ public final class Chat {
           }
         }
         return null;
+      }
+    });
+
+      /**
+       * Command line command that will use the context that was created
+       */
+    panel.register("info", new Panel.Command(){
+      @Override
+      public void invoke(Scanner args){
+        final ServerInfo info = context.getInfo();
+        if(info == null){
+          // Communicate error to user - the server did not send a valid info object.
+          System.out.println("The server did not send a valid info object.");
+        }
+        else{
+          //THIS NEEDS TO BE UPDATED
+          System.out.println("RUNNNING INFO");
+        }
       }
     });
 

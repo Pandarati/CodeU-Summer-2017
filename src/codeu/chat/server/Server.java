@@ -18,26 +18,19 @@ package codeu.chat.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.LinearUuidGenerator;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
-import codeu.chat.util.Logger;
-import codeu.chat.util.Serializers;
-import codeu.chat.util.Time;
-import codeu.chat.util.Timeline;
-import codeu.chat.util.Uuid;
+import codeu.chat.common.ServerInfo;
+import codeu.chat.util.*;
 import codeu.chat.util.connections.Connection;
 
 public final class Server {
@@ -63,6 +56,9 @@ public final class Server {
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
+
+  //Creates an instance of UpTimeServerInfo that helps keep the Time of when the server started
+  private static ServerInfo serverInfo;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
@@ -143,7 +139,30 @@ public final class Server {
       }
     });
 
-    // Get Conversations By Id - A client wants to get a subset of the converations from
+    // Get Server Request - A client whats to get all the request to the server from the back end.
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command(){
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException{
+            Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+
+
+            try{
+              serverInfo = new ServerInfo();
+            }catch (IOException ex){
+              LOG.error(ex, "There was a problem with parsing the ServerInfo.");
+            }
+
+
+            //Writes out the ServerInfo Version and StartTime to the user!
+            Uuid.SERIALIZER.write(out, serverInfo.version);
+            Time.SERIALIZER.write(out, serverInfo.startTime);
+        }
+    });
+
+    // .
+    //
+    //
+    // .0Conversations By Id - A client wants to get a subset of the converations from
     //                           the back end. Normally this will be done after calling
     //                           Get Conversations to get all the headers and now the client
     //                           wants to get a subset of the payloads.
