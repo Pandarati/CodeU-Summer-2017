@@ -148,14 +148,14 @@ public final class Server {
 
             try{
               serverInfo = new ServerInfo();
-            }catch (Exception ex){
+            }catch (IOException ex){
               LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
 
             //Writes out the ServerInfo Version and StartTime to the user!
             Uuid.SERIALIZER.write(out, serverInfo.version);
-            Time.SERIALIZER.write(out, view.getInfo().startTime);
+            Time.SERIALIZER.write(out, serverInfo.startTime);
         }
     });
 

@@ -16,9 +16,17 @@ package codeu.chat.client.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import codeu.chat.common.*;
-import codeu.chat.util.*;
+import codeu.chat.common.BasicView;
+import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.NetworkCode;
+import codeu.chat.common.User;
+import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Message;
+import codeu.chat.common.ServerInfo;
+import codeu.chat.util.Logger;
+import codeu.chat.util.Serializers;
+import codeu.chat.util.Time;
+import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
@@ -129,25 +137,25 @@ final class View implements BasicView {
     return messages;
   }
 
-    /**Gets the Server Information
+    /** Gets the Server Information
      *
-     * Based on request and response time.
+     *  Based on request and response time.
      *
-     * @return ServerInfo(startTime, version)
+     *  @return ServerInfo(startTime, version)
      */
   public ServerInfo getInfo(){
     try(final Connection connection = source.connect()){
         Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
-        if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE){
-            final Time startTime = Time.SERIALIZER.read(connection.in());
-            final Uuid version = Uuid.SERIALIZER.read(connection.in());
+        if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
+          final Time startTime = Time.SERIALIZER.read(connection.in());
+          final Uuid version = Uuid.SERIALIZER.read(connection.in());
 
 
-            //Creates a new ServerInfo object with the latest info: startTime and version
-            return new ServerInfo(startTime, version);
+          //Creates a new ServerInfo object with the latest info: startTime and version
+          return new ServerInfo(startTime, version);
         }
-        //There was a problem with forming the connection
         else {
+            //There was a problem with forming the connection
             // Communicate this error - The server didn't respond with the connection we wanted.
             System.out.println("The connections don't match!");
         }
@@ -158,7 +166,7 @@ final class View implements BasicView {
     }
 
 
-    //Coomunicate this error - Something went wrong, and this shouldn't be returning!
+    //Communicate this error - Something went wrong, and this shouldn't be returning!
     return null;
   }
 

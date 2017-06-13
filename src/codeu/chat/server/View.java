@@ -80,17 +80,6 @@ public final class View implements BasicView, SinglesView {
     return all;
   }
 
-  /**Blank definition.
-   *
-   * In BasicView, " public ServerInfo getInfo();" was defined. T
-   * Thus, it needed to be defined here.
-   *
-   * @return null
-   */
-  public ServerInfo getInfo(){
-
-    return null;
-  }
 
   private static <T> Collection<T> intersect(StoreAccessor<Uuid, T> store, Collection<Uuid> ids) {
 

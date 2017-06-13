@@ -14,21 +14,21 @@ public final class ServerInfo {
     private final static String SERVER_VERSION = "1.0.0";
     public Uuid version;
 
-    public ServerInfo() throws IOException{
+    public ServerInfo() throws IOException {
         //Set the startTime equal to the Time value that the server was started
         this.startTime = Time.now();
         this.version = Uuid.parse(SERVER_VERSION);
     }
 
-    public ServerInfo(Uuid version) throws IOException{
+    public ServerInfo(Uuid version) throws IOException {
         this.version = version;
     }
 
-    public ServerInfo(Time time) throws IOException{
+    public ServerInfo(Time time) throws IOException {
         this.startTime = time;
     }
 
-    public ServerInfo(Time startTime, Uuid version) throws IOException{
+    public ServerInfo(Time startTime, Uuid version) throws IOException {
         this.startTime = startTime;
         this.version = version;
     }
