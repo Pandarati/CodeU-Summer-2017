@@ -1,9 +1,14 @@
 
 package codeu.chat.util;
 
-import java.io.*;
+import java.io.IOException;
 
 public final class Tokenizer {
+
+    private final String source;
+
+    private StringBuilder token;
+    private int at;
 
     public Tokenizer (String source) {
         this.source = source;
@@ -66,10 +71,4 @@ public final class Tokenizer {
         read(); // read the closing the quote that allowed us to exit the loop
         return token.toString();
     }
-
-
-
-    private StringBuilder token;
-    private String source;
-    private int at;
 }

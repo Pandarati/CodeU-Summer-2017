@@ -175,8 +175,8 @@ public final class Chat {
         if (info == null) {
           System.out.println("ERROR: Invalid information");
         } else {
-          System.out.println("Server info: version: " + NetworkCode.SERVER_INFO_RESPONSE + " start time: " + info.startTime.toString());
           // Print the server info to the user in a pretty way
+          System.out.println("Server info: version: " + NetworkCode.SERVER_INFO_RESPONSE + " start time: " + info.startTime.toString());
         }
       }
     });
