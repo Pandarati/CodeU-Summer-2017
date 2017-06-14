@@ -57,7 +57,7 @@ public final class Server {
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
 
-  //Creates an instance of UpTimeServerInfo that helps keep the Time of when the server started
+  //Creates an instance of ServerInfo that helps keep the Time and version of when the server started
   private static ServerInfo serverInfo;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
