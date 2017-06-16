@@ -15,9 +15,7 @@
 
 package codeu.chat.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,12 +58,30 @@ public final class Server {
   //Creates an instance of ServerInfo that helps keep the Time and version of when the server started
   private static ServerInfo serverInfo;
 
-  public Server(final Uuid id, final Secret secret, final Relay relay) {
+  //Log Files Info
+  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
+  public PrintWriter outputStream;
+
+
+  public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException{
 
     this.id = id;
     this.secret = secret;
     this.controller = new Controller(id, model);
     this.relay = relay;
+
+    //Server Variables
+    try {
+        outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
+    }catch (FileNotFoundException e){
+      e.printStackTrace();
+    }
+
+    outputStream.append("");
+    outputStream.println();
+    outputStream.println("-------------------------------");
+    outputStream.println("New Instance of Server");
+    outputStream.flush();
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -85,6 +101,8 @@ public final class Server {
             author,
             conversation,
             message.id));
+
+
       }
     });
 
@@ -98,6 +116,8 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
         Serializers.nullable(User.SERIALIZER).write(out, user);
+
+
       }
     });
 

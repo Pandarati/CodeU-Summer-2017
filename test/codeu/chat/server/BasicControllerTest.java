@@ -24,13 +24,15 @@ import codeu.chat.common.Message;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 
+import java.io.IOException;
+
 public final class BasicControllerTest {
 
   private Model model;
   private BasicController controller;
 
   @Before
-  public void doBefore() {
+  public void doBefore() throws IOException{
     model = new Model();
     controller = new Controller(Uuid.NULL, model);
   }

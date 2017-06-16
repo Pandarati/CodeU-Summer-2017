@@ -14,6 +14,10 @@
 
 package codeu.chat.server;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 
 import codeu.chat.common.BasicController;
@@ -34,9 +38,26 @@ public final class Controller implements RawController, BasicController {
   private final Model model;
   private final Uuid.Generator uuidGenerator;
 
-  public Controller(Uuid serverId, Model model) {
+  //Log Files Info
+  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
+  public PrintWriter outputStream;
+
+
+  public Controller(Uuid serverId, Model model) throws IOException{
     this.model = model;
     this.uuidGenerator = new RandomUuidGenerator(serverId, System.currentTimeMillis());
+
+    //Server Variables
+    try {
+      outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
+    }catch (FileNotFoundException e){
+      e.printStackTrace();
+    }
+
+    //Appends to the current log
+    outputStream.append("");
+    outputStream.println();
+    outputStream.flush();
   }
 
   @Override
@@ -96,6 +117,10 @@ public final class Controller implements RawController, BasicController {
       foundConversation.lastMessage = message.id;
     }
 
+    //TRANSACTION LOG CODE
+    outputStream.println("ADD-MESSAGE " + conversation + " "+ creationTime + " " + author + " \"" + body + "\"");
+    outputStream.flush();
+
     return message;
   }
 
@@ -124,6 +149,10 @@ public final class Controller implements RawController, BasicController {
           creationTime);
     }
 
+    //TRANSACTION LOG CODE
+    outputStream.println("ADD-USER " + user.id + " \"" + name  + "\" " + creationTime);
+    outputStream.flush();
+
     return user;
   }
 
@@ -139,6 +168,10 @@ public final class Controller implements RawController, BasicController {
       model.add(conversation);
       LOG.info("Conversation added: " + id);
     }
+
+    //TRANSACTION LOG CODE
+    outputStream.println("ADD-CONVERSATION " + id + " \"" + title  + "\" " + owner + creationTime);
+    outputStream.flush();
 
     return conversation;
   }
