@@ -78,7 +78,6 @@ public final class Server {
     }
 
     outputStream.append("");
-    outputStream.println();
     outputStream.println("-------------------------------");
     outputStream.println("New Instance of Server");
     outputStream.flush();

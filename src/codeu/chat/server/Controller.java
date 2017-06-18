@@ -56,7 +56,6 @@ public final class Controller implements RawController, BasicController {
 
     //Appends to the current log
     outputStream.append("");
-    outputStream.println();
     outputStream.flush();
   }
 
@@ -118,7 +117,7 @@ public final class Controller implements RawController, BasicController {
     }
 
     //TRANSACTION LOG CODE
-    outputStream.println("ADD-MESSAGE " + conversation + " "+ creationTime + " " + author + " \"" + body + "\"");
+    outputStream.println("ADD-MESSAGE " + conversation + " " + id + " " + creationTime + " " + author + " \"" + body + "\"");
     outputStream.flush();
 
     return message;
