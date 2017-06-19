@@ -16,9 +16,7 @@
 package codeu.chat.server;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -28,6 +26,7 @@ import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
 import codeu.chat.common.ServerInfo;
+//FIX THIS. I don't know why IntelliJ does this automatically when you have a ton of imports.
 import codeu.chat.util.*;
 import codeu.chat.util.connections.Connection;
 
@@ -61,7 +60,10 @@ public final class Server {
   //Log Files Info
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
+  LogReader logReader;
 
+  //FileLines from reading in the text!
+  ArrayList<String> fileLines;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException{
 
@@ -70,6 +72,9 @@ public final class Server {
     this.controller = new Controller(id, model);
     this.relay = relay;
 
+
+
+
     //Server Variables
     try {
         outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
@@ -77,10 +82,46 @@ public final class Server {
       e.printStackTrace();
     }
 
+    //DELETE THIS BECAUSE THERE IS A DUPE IN IDS
     outputStream.append("");
-    outputStream.println("-------------------------------");
-    outputStream.println("New Instance of Server");
     outputStream.flush();
+
+
+    //Read in Files Variables
+    logReader = new LogReader();
+    fileLines = logReader.readFile();
+
+    /*
+    Important: Find out how to covert a String to Time instead of using Time.now()!
+     */
+    for(int i = 0; i < fileLines.size(); i++){
+      LogLoader logLoader = new LogLoader(fileLines.get(i));
+
+      //Load in User
+      if(logLoader.findCommmand().equals("U")){
+        String[] userInfo = logLoader.loadUser();
+        this.controller.newUser(Uuid.parse(userInfo[0]), userInfo[1], Time.now());
+      }
+      //Load in Conversation
+      else if(logLoader.findCommmand().equals("C")){
+        String[] userInfo = logLoader.loadConversation();
+        this.controller.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.now());
+      }
+      //Load in message
+      else if(logLoader.findCommmand().equals("M")){
+        //userInfo Array: [convoID] [messageID] [TIME] [userID] [messageContent]
+        String[] userInfo = logLoader.loadMessage();
+        this.controller.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.now());
+      }
+
+    }
+
+    //We finished Loading the Log(This is so we don't rewrite to the log stuff that's already in it)
+    controller.finishedLoadingLog = true;
+
+
+
+
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {

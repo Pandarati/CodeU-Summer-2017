@@ -37,6 +37,7 @@ public final class Controller implements RawController, BasicController {
 
   private final Model model;
   private final Uuid.Generator uuidGenerator;
+  public boolean finishedLoadingLog = false;
 
   //Log Files Info
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
@@ -116,9 +117,12 @@ public final class Controller implements RawController, BasicController {
       foundConversation.lastMessage = message.id;
     }
 
-    //TRANSACTION LOG CODE
-    outputStream.println("ADD-MESSAGE " + conversation + " " + id + " " + creationTime + " " + author + " \"" + body + "\"");
-    outputStream.flush();
+    //We only want to run this if we are done running the log
+    if(finishedLoadingLog) {
+      //TRANSACTION LOG CODE
+      outputStream.println("ADD-MESSAGE " + conversation + " " + id + " " + creationTime + " " + author + " \"" + body + "\"");
+      outputStream.flush();
+    }
 
     return message;
   }
@@ -149,8 +153,11 @@ public final class Controller implements RawController, BasicController {
     }
 
     //TRANSACTION LOG CODE
-    outputStream.println("ADD-USER " + user.id + " \"" + name  + "\" " + creationTime);
-    outputStream.flush();
+    //WE ONLY WANT TO RUN THIS IF WE FINISHED LOADING THE SUTFF ALREADY IN THE LOG
+    if(finishedLoadingLog) {
+      outputStream.println("ADD-USER " + user.id + " \"" + name + "\" " + creationTime);
+      outputStream.flush();
+    }
 
     return user;
   }
@@ -168,9 +175,12 @@ public final class Controller implements RawController, BasicController {
       LOG.info("Conversation added: " + id);
     }
 
-    //TRANSACTION LOG CODE
-    outputStream.println("ADD-CONVERSATION " + id + " \"" + title  + "\" " + owner + creationTime);
-    outputStream.flush();
+    //We shouldn't be adding to the LOG  until we finished reading from it
+    if(finishedLoadingLog) {
+      //TRANSACTION LOG CODE
+      outputStream.println("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime);
+      outputStream.flush();
+    }
 
     return conversation;
   }
