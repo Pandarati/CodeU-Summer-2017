@@ -112,4 +112,56 @@ final class Controller implements BasicController {
 
     return response;
   }
+
+
+  //Eve's Backend implementation
+  @Override
+  public Interest newUserInterest(Uuid owner, Uuid userId) {
+
+    Interest response = null;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_INTEREST_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), owner);
+      Uuid.SERIALIZER.write(connection.out(), userId);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_INTEREST_RESPONSE) {
+        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
+        LOG.info("newUserInterest: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
+  @Override
+  public Interest newConInterest(Uuid owner, Uuid conversation) {
+
+    Interest response = null;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CON_INTEREST_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), owner);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CON_INTEREST_RESPONSE) {
+        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
+        LOG.info("newConInterest: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
 }

@@ -426,4 +426,69 @@ public final class Chat {
     // so that it can be used.
     return panel;
   }
+
+  private Panel createInterestPanel(final InterestContext interest) {
+
+    final Panel panel = new Panel();
+
+
+    // I-ADD (add interest)
+    //
+    // Add a command to add a new interest when the user enters
+    // i-add while on the interest panel.
+    //
+    panel.register("i-add", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String input = args.size() > 0 ? args.get(0) : "";
+        // add another condition here which checks if interest exists
+        // (check if the entry is a preexisting user or conversation)
+        // also needs to check that interest is not already added
+        if (input.length() > 0 ) { 
+          interest.add(input);
+        } else {
+          System.out.println("ERROR: Please enter a valid conversation or user");
+        }
+      }
+    });
+
+    // I-REMOVE (remove interest)
+    //
+    // Add a command to remove an existing interest when the user enters
+    // i-remove while on the interest panel.
+    //
+    panel.register("i-remove", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String input = args.size() > 0 ? args.get(0) : "";
+        // change the condition so that it checks if the interest is already on the interest list
+        if (input.length() > 0 ) { 
+          interest.remove(input);
+        } else {
+          System.out.println("ERROR: ");
+        }
+      }
+    });
+
+    // VIEW-UPDATE (View the update status)
+    //
+    // Add a command that lets the user view the update status
+    // when the use types view-update while on the interest panel.
+    //
+    panel.register("view-update", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String input = args.size() > 0 ? args.get(0) : "";
+        // add another condition here which checks if interest exists
+        // (check if the entry is a preexisting user or conversation)
+        // also needs to check that interest is not already added
+        if (input.length() > 0 ) { 
+          interest.add(input);
+        } else {
+          System.out.println("ERROR: Please enter a valid conversation or user");
+        }
+      }
+    });
+
+
 }
