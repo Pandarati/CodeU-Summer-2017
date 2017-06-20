@@ -24,6 +24,7 @@ import java.util.Map;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
@@ -115,6 +116,34 @@ public final class Server {
       }
     });
 
+    // New Interest - A client wants to add a new interest in a user to the back end.
+    this.commands.put(NetworkCode.NEW_USER_INTEREST_REQUEST,  new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Uuid owner = Uuid.SERIALIZER.read(in);
+            final Uuid userId = Uuid.SERIALIZER.read(in);
+            final Interest interest = controller.newUserInterest(owner, userId);
+
+            Serializers.INTEGER.write(out, NetworkCode.NEW_USER_INTEREST_RESPONSE);
+            Serializers.nullable(Interest.SERIALIZER).write(out, interest);
+        }
+    });
+
+    // New Interest - A client wants to add a new interest in a conversation to the back end
+    this.commands.put(NetworkCode.NEW_CON_INTEREST_REQUEST,  new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Uuid owner = Uuid.SERIALIZER.read(in);
+            final Uuid conversationId = Uuid.SERIALIZER.read(in);
+            final Interest interest = controller.newConInterest(owner, conversationId);
+
+            Serializers.INTEGER.write(out, NetworkCode.NEW_CON_INTEREST_RESPONSE);
+            Serializers.nullable(Interest.SERIALIZER).write(out, interest);
+        }
+    });
+
     // Get Users - A client wants to get all the users from the back end.
     this.commands.put(NetworkCode.GET_USERS_REQUEST, new Command() {
       @Override
@@ -152,8 +181,7 @@ public final class Server {
               LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
-
-            //Writes out the ServerInfo Version and StartTime to the user!
+            // Writes out the ServerInfo Version and StartTime to the user!
             Uuid.SERIALIZER.write(out, serverInfo.version);
             Time.SERIALIZER.write(out, serverInfo.startTime);
         }
@@ -190,6 +218,9 @@ public final class Server {
         Serializers.collection(Message.SERIALIZER).write(out, messages);
       }
     });
+
+    // add status update commands
+      // view.statusUpdate
 
     this.timeline.scheduleNow(new Runnable() {
       @Override

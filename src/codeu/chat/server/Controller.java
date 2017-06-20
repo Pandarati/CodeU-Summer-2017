@@ -19,6 +19,7 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
@@ -52,6 +53,16 @@ public final class Controller implements RawController, BasicController {
   @Override
   public ConversationHeader newConversation(String title, Uuid owner) {
     return newConversation(createId(), title, owner, Time.now());
+  }
+
+  @Override
+  public Interest newUserInterest(Uuid owner, Uuid interestId) {
+    return newUserInterest(createId(), owner, interestId, Time.now());
+  }
+
+  @Override
+  public Interest newConInterest(Uuid owner, Uuid conversation) {
+      return newConInterest(createId(), owner, conversation, Time.now());
   }
 
   @Override
@@ -142,6 +153,40 @@ public final class Controller implements RawController, BasicController {
 
     return conversation;
   }
+
+  @Override
+    public Interest newUserInterest(Uuid id, Uuid owner, Uuid userId, Time creationTime){
+
+        final User foundUser = model.userById().first(owner);
+        final User interestUser = model.userById().first(userId);
+
+        Interest interest = null;
+
+        if(foundUser != null && interestUser != null && isIdFree(id)) {
+            interest = new Interest(id, owner, userId, creationTime);
+            model.add(interest);
+            LOG.info("User interest added: " + id);
+        }
+
+        return interest;
+    }
+
+    @Override
+    public Interest newConInterest(Uuid id, Uuid owner, Uuid conversation, Time creationTime){
+
+        final User foundUser = model.userById().first(owner);
+        final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
+
+        Interest interest = null;
+
+        if(foundUser != null && foundConversation != null && isIdFree(id)) {
+            interest = new Interest(id, owner, conversation, creationTime);
+            model.add(interest);
+            LOG.info("Conversation interest added: " + id);
+        }
+
+        return interest;
+    }
 
   private Uuid createId() {
 

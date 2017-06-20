@@ -60,11 +60,15 @@ public final class View implements BasicView, SinglesView {
     return intersect(model.messageById(), ids);
   }
 
+  // getInterests for User and Conversation
+
   @Override
   public User findUser(Uuid id) { return model.userById().first(id); }
 
   @Override
   public ConversationHeader findConversation(Uuid id) { return model.conversationById().first(id); }
+
+  //findInterests for User and Conversation
 
   @Override
   public Message findMessage(Uuid id) { return model.messageById().first(id); }
@@ -103,4 +107,6 @@ public final class View implements BasicView, SinglesView {
 
     return found;
   }
+
+  //this is where we write STATUS UPDATE!!!
 }
