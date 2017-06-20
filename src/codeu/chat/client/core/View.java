@@ -186,7 +186,7 @@ final class View implements BasicView {
       Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_INTERESTS_BY_ID_RESPONSE) {
-        messages.addAll(Serializers.collection(Message.SERIALIZER).read(connection.in()));
+        interests.addAll(Serializers.collection(Message.SERIALIZER).read(connection.in()));
       } else {
         LOG.error("Response from server failed.");
       }
@@ -195,7 +195,7 @@ final class View implements BasicView {
       LOG.error(ex, "Exception during call on server.");
     }
 
-    return messages;
+    return interests;
 
   } 
 
