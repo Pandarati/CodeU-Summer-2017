@@ -478,15 +478,7 @@ public final class Chat {
     panel.register("view-update", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        final String input = args.size() > 0 ? args.get(0) : "";
-        // add another condition here which checks if interest exists
-        // (check if the entry is a preexisting user or conversation)
-        // also needs to check that interest is not already added
-        if (input.length() > 0 ) { 
-          interest.add(input);
-        } else {
-          System.out.println("ERROR: Please enter a valid conversation or user");
-        }
+        System.out.println("");
       }
     });
 
