@@ -18,10 +18,11 @@ import java.util.Comparator;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Interest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.LinearUuidGenerator;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.store.Store;
@@ -68,8 +69,9 @@ public final class Model {
   private final Store<Time, Message> messageByTime = new Store<>(TIME_COMPARE);
   private final Store<String, Message> messageByText = new Store<>(STRING_COMPARE);
 
-  private final Store<Uuid, Interest> interestById = new Store<>(UUID_COMPARE);
-  private final Store<Time, Interest> interestByTime = new Store<>(TIME_COMPARE);
+  private final Store<Uuid, UserInterest> userInterestById = new Store<>(UUID_COMPARE);
+
+  private final Store<Uuid, ConversationInterest> conversationInterestById = new Store<>(UUID_COMPARE);
 
   public void add(User user) {
     userById.insert(user.id, user);
@@ -130,13 +132,16 @@ public final class Model {
     return messageByText;
   }
 
-  public void add(Interest interest) {
-    interestById.insert(interest.id, interest);
-    interestByTime.insert(interest.creation, interest);
+  public void add(UserInterest interest) {
+    userInterestById.insert(interest.id, interest);
   }
 
-  public StoreAccessor<Uuid, Interest> interestById() { return interestById; }
+  public StoreAccessor<Uuid, UserInterest> userInterestById() { return userInterestById; }
 
-  public StoreAccessor<Time, Interest> interestByTime() { return interestByTime; }
+  public void add(ConversationInterest interest) {
+      conversationInterestById.insert(interest.id, interest);
+  }
+
+  public StoreAccessor<Uuid, ConversationInterest> conversationInterestById() { return conversationInterestById; }
 
 }

@@ -9,24 +9,24 @@ import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
-public class Interest {
+public class ConversationInterest {
 
-    public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
+    public static final Serializer<ConversationInterest> SERIALIZER = new Serializer<ConversationInterest>() {
 
         @Override
-        public void write(OutputStream out, Interest value) throws IOException {
+        public void write(OutputStream out, ConversationInterest value) throws IOException {
 
             Uuid.SERIALIZER.write(out, value.id);
             Uuid.SERIALIZER.write(out, value.owner);
-            Uuid.SERIALIZER.write(out, value.interestId);
+            Uuid.SERIALIZER.write(out, value.conversation);
             Time.SERIALIZER.write(out, value.creation);
 
         }
 
         @Override
-        public Interest read(InputStream in) throws IOException {
+        public ConversationInterest read(InputStream in) throws IOException {
 
-            return new Interest(
+            return new ConversationInterest(
                     Uuid.SERIALIZER.read(in),
                     Uuid.SERIALIZER.read(in),
                     Uuid.SERIALIZER.read(in),
@@ -38,14 +38,14 @@ public class Interest {
 
     public final Uuid id;
     public final Uuid owner;
-    public final Uuid interestId;
+    public final Uuid conversation;
     public final Time creation;
 
     // constructor for a User interest
-    public Interest (Uuid id, Uuid owner, Uuid interestId, Time creation){
+    public ConversationInterest (Uuid id, Uuid owner, Uuid conversation, Time creation){
         this.id = id;
         this.owner = owner;
-        this.interestId = interestId;
+        this.conversation = conversation;
         this.creation = creation;
     }
 }

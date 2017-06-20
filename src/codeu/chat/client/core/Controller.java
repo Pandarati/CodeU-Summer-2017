@@ -20,10 +20,11 @@ import java.lang.Thread;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.Interest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Uuid;
@@ -115,9 +116,9 @@ final class Controller implements BasicController {
   }
 
   @Override
-  public Interest newUserInterest(Uuid owner, Uuid userId) {
+  public UserInterest newUserInterest(Uuid owner, Uuid userId) {
 
-    Interest response = null;
+    UserInterest response = null;
 
     try (final Connection connection = source.connect()) {
 
@@ -126,7 +127,7 @@ final class Controller implements BasicController {
       Uuid.SERIALIZER.write(connection.out(), userId);
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_INTEREST_RESPONSE) {
-        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
+        response = Serializers.nullable(UserInterest.SERIALIZER).read(connection.in());
         LOG.info("newUserInterest: Response completed.");
       } else {
         LOG.error("Response from server failed.");
@@ -140,19 +141,19 @@ final class Controller implements BasicController {
   }
 
   @Override
-  public Interest newConInterest(Uuid owner, Uuid conversation) {
+  public ConversationInterest newConversationInterest(Uuid owner, Uuid conversation) {
 
-    Interest response = null;
+    ConversationInterest response = null;
 
     try (final Connection connection = source.connect()) {
 
-      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CON_INTEREST_REQUEST);
+      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CONVERSATION_INTEREST_REQUEST);
       Uuid.SERIALIZER.write(connection.out(), owner);
       Uuid.SERIALIZER.write(connection.out(), conversation);
 
-      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CON_INTEREST_RESPONSE) {
-        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
-        LOG.info("newConInterest: Response completed.");
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVERSATION_INTEREST_RESPONSE) {
+        response = Serializers.nullable(ConversationInterest.SERIALIZER).read(connection.in());
+        LOG.info("newConversationInterest: Response completed.");
       } else {
         LOG.error("Response from server failed.");
       }

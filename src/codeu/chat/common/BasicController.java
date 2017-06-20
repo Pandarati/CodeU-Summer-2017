@@ -57,7 +57,7 @@ public interface BasicController {
   //  be provided or else the server won't apply the change. If the
   //  operation is successful, a Interest object will be returned
   //  representing the full state of the interest on the server.
-  Interest newUserInterest(Uuid owner, Uuid userId);
+  UserInterest newUserInterest(Uuid owner, Uuid userId);
 
   // NEW INTEREST (in a Conversation)
   //
@@ -65,6 +65,6 @@ public interface BasicController {
   //  must be provided or else the server won't apply the change. If the
   //  operation is successful, a Interest object will be returned
   //  representing the full state of the interest on the server.
-  Interest newConInterest(Uuid owner, Uuid conversation);
+  ConversationInterest newConversationInterest(Uuid owner, Uuid conversation);
 
 }

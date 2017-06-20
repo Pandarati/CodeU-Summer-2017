@@ -19,11 +19,12 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Interest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
@@ -56,13 +57,13 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public Interest newUserInterest(Uuid owner, Uuid interestId) {
-    return newUserInterest(createId(), owner, interestId, Time.now());
+  public UserInterest newUserInterest(Uuid owner, Uuid userId) {
+    return newUserInterest(createId(), owner, userId, Time.now());
   }
 
   @Override
-  public Interest newConInterest(Uuid owner, Uuid conversation) {
-      return newConInterest(createId(), owner, conversation, Time.now());
+  public ConversationInterest newConversationInterest(Uuid owner, Uuid conversation) {
+      return newConversationInterest(createId(), owner, conversation, Time.now());
   }
 
   @Override
@@ -155,15 +156,15 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-    public Interest newUserInterest(Uuid id, Uuid owner, Uuid userId, Time creationTime){
+    public UserInterest newUserInterest(Uuid id, Uuid owner, Uuid userId, Time creationTime){
 
         final User foundUser = model.userById().first(owner);
         final User interestUser = model.userById().first(userId);
 
-        Interest interest = null;
+        UserInterest interest = null;
 
         if(foundUser != null && interestUser != null && isIdFree(id)) {
-            interest = new Interest(id, owner, userId, creationTime);
+            interest = new UserInterest(id, owner, userId, creationTime);
             model.add(interest);
             LOG.info("User interest added: " + id);
         }
@@ -172,15 +173,15 @@ public final class Controller implements RawController, BasicController {
     }
 
     @Override
-    public Interest newConInterest(Uuid id, Uuid owner, Uuid conversation, Time creationTime){
+    public ConversationInterest newConversationInterest(Uuid id, Uuid owner, Uuid conversation, Time creationTime){
 
         final User foundUser = model.userById().first(owner);
         final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
 
-        Interest interest = null;
+        ConversationInterest interest = null;
 
         if(foundUser != null && foundConversation != null && isIdFree(id)) {
-            interest = new Interest(id, owner, conversation, creationTime);
+            interest = new ConversationInterest(id, owner, conversation, creationTime);
             model.add(interest);
             LOG.info("Conversation interest added: " + id);
         }

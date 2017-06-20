@@ -24,12 +24,13 @@ import java.util.Map;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Interest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.*;
 import codeu.chat.util.connections.Connection;
@@ -123,24 +124,24 @@ public final class Server {
 
             final Uuid owner = Uuid.SERIALIZER.read(in);
             final Uuid userId = Uuid.SERIALIZER.read(in);
-            final Interest interest = controller.newUserInterest(owner, userId);
+            final UserInterest interest = controller.newUserInterest(owner, userId);
 
             Serializers.INTEGER.write(out, NetworkCode.NEW_USER_INTEREST_RESPONSE);
-            Serializers.nullable(Interest.SERIALIZER).write(out, interest);
+            Serializers.nullable(UserInterest.SERIALIZER).write(out, interest);
         }
     });
 
     // New Interest - A client wants to add a new interest in a conversation to the back end
-    this.commands.put(NetworkCode.NEW_CON_INTEREST_REQUEST,  new Command() {
+    this.commands.put(NetworkCode.NEW_CONVERSATION_INTEREST_REQUEST,  new Command() {
         @Override
         public void onMessage(InputStream in, OutputStream out) throws IOException {
 
             final Uuid owner = Uuid.SERIALIZER.read(in);
             final Uuid conversationId = Uuid.SERIALIZER.read(in);
-            final Interest interest = controller.newConInterest(owner, conversationId);
+            final ConversationInterest interest = controller.newConversationInterest(owner, conversationId);
 
-            Serializers.INTEGER.write(out, NetworkCode.NEW_CON_INTEREST_RESPONSE);
-            Serializers.nullable(Interest.SERIALIZER).write(out, interest);
+            Serializers.INTEGER.write(out, NetworkCode.NEW_CONVERSATION_INTEREST_RESPONSE);
+            Serializers.nullable(ConversationInterest.SERIALIZER).write(out, interest);
         }
     });
 
