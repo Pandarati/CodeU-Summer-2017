@@ -478,7 +478,7 @@ public final class Chat {
     panel.register("view-update", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        System.out.println("");
+        System.out.println("");Ch
       }
     });
 
