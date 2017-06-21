@@ -16,6 +16,9 @@
 package codeu.chat.server;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.*;
 
 import codeu.chat.common.ConversationHeader;
@@ -62,7 +65,7 @@ public final class Server {
   public PrintWriter outputStream;
   LogReader logReader;
 
-  //FileLines from reading in the text!
+  //Store the lines of Log
   ArrayList<String> fileLines;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException{
@@ -73,27 +76,22 @@ public final class Server {
     this.relay = relay;
 
 
-
-
-    //Server Variables
+    //Connects the Log to the Server
     try {
         outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
     }catch (FileNotFoundException e){
       e.printStackTrace();
     }
 
-    //DELETE THIS BECAUSE THERE IS A DUPE IN IDS
+    //Set-ups OutputStream to append to current Log Information
     outputStream.append("");
     outputStream.flush();
 
-
-    //Read in Files Variables
+    //Reads in the Log and stores the lines in an ArrayList
     logReader = new LogReader();
     fileLines = logReader.readFile();
 
-    /*
-    Important: Find out how to covert a String to Time instead of using Time.now()!
-     */
+    //Loads in the fileLines from the Log
     for(int i = 0; i < fileLines.size(); i++){
       LogLoader logLoader = new LogLoader(fileLines.get(i));
 
@@ -105,22 +103,18 @@ public final class Server {
       //Load in Conversation
       else if(logLoader.findCommmand().equals("C")){
         String[] userInfo = logLoader.loadConversation();
-        this.controller.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.now());
+        this.controller.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.fromMs(Long.parseLong(userInfo[3])));
       }
-      //Load in message
+      //Load in Message
       else if(logLoader.findCommmand().equals("M")){
-        //userInfo Array: [convoID] [messageID] [TIME] [userID] [messageContent]
         String[] userInfo = logLoader.loadMessage();
-        this.controller.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.now());
+        this.controller.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.fromMs(Long.parseLong(userInfo[2])));
       }
 
     }
 
     //We finished Loading the Log(This is so we don't rewrite to the log stuff that's already in it)
     controller.finishedLoadingLog = true;
-
-
-
 
 
     // New Message - A client wants to add a new message to the back end.

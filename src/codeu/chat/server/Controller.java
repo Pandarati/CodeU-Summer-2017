@@ -18,8 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -39,7 +37,7 @@ public final class Controller implements RawController, BasicController {
   private final Uuid.Generator uuidGenerator;
   public boolean finishedLoadingLog = false;
 
-  //Log Files Info
+  //Log Writer Info
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
 
@@ -55,7 +53,7 @@ public final class Controller implements RawController, BasicController {
       e.printStackTrace();
     }
 
-    //Appends to the current log
+    //Appends to Log instead of overwriting it
     outputStream.append("");
     outputStream.flush();
   }
@@ -113,14 +111,12 @@ public final class Controller implements RawController, BasicController {
           foundConversation.firstMessage;
 
       // Update the conversation to point to the new last message as it has changed.
-
       foundConversation.lastMessage = message.id;
     }
 
-    //We only want to run this if we are done running the log
+    //Log should load before adding new commands.
     if(finishedLoadingLog) {
-      //TRANSACTION LOG CODE
-      outputStream.println("ADD-MESSAGE " + conversation + " " + id + " " + creationTime + " " + author + " \"" + body + "\"");
+      outputStream.println("ADD-MESSAGE " + conversation + " " + id + " " + creationTime.inMs() + " " + author + " \"" + body + "\"");
       outputStream.flush();
     }
 
@@ -152,10 +148,9 @@ public final class Controller implements RawController, BasicController {
           creationTime);
     }
 
-    //TRANSACTION LOG CODE
-    //WE ONLY WANT TO RUN THIS IF WE FINISHED LOADING THE SUTFF ALREADY IN THE LOG
+    //Log should load before adding new commands.
     if(finishedLoadingLog) {
-      outputStream.println("ADD-USER " + user.id + " \"" + name + "\" " + creationTime);
+      outputStream.println("ADD-USER " + user.id + " \"" + name + "\" " + creationTime.inMs());
       outputStream.flush();
     }
 
@@ -175,10 +170,9 @@ public final class Controller implements RawController, BasicController {
       LOG.info("Conversation added: " + id);
     }
 
-    //We shouldn't be adding to the LOG  until we finished reading from it
+    //Log should load before adding new commands.
     if(finishedLoadingLog) {
-      //TRANSACTION LOG CODE
-      outputStream.println("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime);
+      outputStream.println("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
       outputStream.flush();
     }
 
