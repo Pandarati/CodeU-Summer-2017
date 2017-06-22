@@ -15,7 +15,6 @@ public class LogReader {
 
     ArrayList<String> fileLines;
 
-    private PrintWriter outputStream;
 
     public LogReader() throws IOException{
 

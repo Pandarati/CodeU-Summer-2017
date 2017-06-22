@@ -18,6 +18,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -41,6 +45,8 @@ public final class Controller implements RawController, BasicController {
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
 
+  ArrayList<String> storedLogCommands = new ArrayList<String>();
+
 
   public Controller(Uuid serverId, Model model) throws IOException{
     this.model = model;
@@ -56,6 +62,9 @@ public final class Controller implements RawController, BasicController {
     //Appends to Log instead of overwriting it
     outputStream.append("");
     outputStream.flush();
+
+    //Start timer
+    start();
   }
 
   @Override
@@ -114,10 +123,9 @@ public final class Controller implements RawController, BasicController {
       foundConversation.lastMessage = message.id;
     }
 
-    //Log should load before adding new commands.
+    //After recreating the state of the server, start storing the newMessage() command calls.
     if(finishedLoadingLog) {
-      outputStream.println("ADD-MESSAGE " + conversation + " " + id + " " + creationTime.inMs() + " " + author + " \"" + body + "\"");
-      outputStream.flush();
+      storedLogCommands.add("ADD-MESSAGE " + conversation + " " + id + " " + creationTime.inMs() + " " + author + " \"" + body + "\"");
     }
 
     return message;
@@ -148,10 +156,9 @@ public final class Controller implements RawController, BasicController {
           creationTime);
     }
 
-    //Log should load before adding new commands.
+    //After recreating the state of the server, start storing the newUser() command calls.
     if(finishedLoadingLog) {
-      outputStream.println("ADD-USER " + user.id + " \"" + name + "\" " + creationTime.inMs());
-      outputStream.flush();
+      storedLogCommands.add("ADD-USER " + user.id + " \"" + name + "\" " + creationTime.inMs());
     }
 
     return user;
@@ -170,10 +177,9 @@ public final class Controller implements RawController, BasicController {
       LOG.info("Conversation added: " + id);
     }
 
-    //Log should load before adding new commands.
+    //After recreating the state of the server, start storing the newConversation() command calls.
     if(finishedLoadingLog) {
-      outputStream.println("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
-      outputStream.flush();
+      storedLogCommands.add("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
     }
 
     return conversation;
@@ -203,5 +209,44 @@ public final class Controller implements RawController, BasicController {
   }
 
   private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
+
+  Timer myTimer = new Timer();
+
+
+  /** Flushes stored log line info to the user
+   *
+   *
+   *
+   */
+  TimerTask task = new TimerTask(){
+    public void run(){
+      //Flushes data to document
+      for(String line : storedLogCommands){
+        outputStream.println(line);
+      }
+
+      //Pushes log commands lines to the LOG.
+      outputStream.flush();
+
+      //Clear the stored Log commands since we just flushed them to the log
+      storedLogCommands.clear();
+    }
+  };
+
+  /**Timer for Refresh Rate of loading files to LOG
+   *
+   * Flushes commands to log every 1 minute with 1 second delay.
+   *
+   * (Can change time for better optimization)
+   *
+   */
+  public void start(){
+    //Refreshes 1 minute with a 1 second delay
+    myTimer.scheduleAtFixedRate(task, 1000, 60000);
+
+  }
+
+
+
 
 }

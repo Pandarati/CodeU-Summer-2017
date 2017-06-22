@@ -15,8 +15,6 @@ public class LogLoader {
 
     }
 
-
-
     /** Finds the command that was entered in
      *
      *  C = Conversation

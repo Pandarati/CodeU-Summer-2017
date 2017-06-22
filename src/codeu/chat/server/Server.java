@@ -15,12 +15,6 @@
 
 package codeu.chat.server;
 
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.util.*;
-
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
@@ -29,9 +23,25 @@ import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
 import codeu.chat.common.ServerInfo;
-//FIX THIS. I don't know why IntelliJ does this automatically when you have a ton of imports.
-import codeu.chat.util.*;
+import codeu.chat.util.LogReader;
+import codeu.chat.util.Logger;
+import codeu.chat.util.Serializers;
+import codeu.chat.util.Time;
+import codeu.chat.util.Timeline;
+import codeu.chat.util.Uuid;
+import codeu.chat.util.LogLoader;
 import codeu.chat.util.connections.Connection;
+
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class Server {
 
