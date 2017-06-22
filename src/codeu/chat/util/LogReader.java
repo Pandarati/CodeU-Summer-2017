@@ -24,8 +24,6 @@ public class LogReader {
             ex.printStackTrace();
         }
 
-
-
         fileLines = new ArrayList<String>();
 
     }

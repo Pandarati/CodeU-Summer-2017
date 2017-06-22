@@ -119,6 +119,5 @@ public class LogLoader {
 
         return userInfo;
     }
-
-
+    
 }

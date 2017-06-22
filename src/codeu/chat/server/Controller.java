@@ -41,7 +41,7 @@ public final class Controller implements RawController, BasicController {
   private final Uuid.Generator uuidGenerator;
   public boolean finishedLoadingLog = false;
 
-  //Log Writer Info
+  //File Info for writing to Log
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
 
