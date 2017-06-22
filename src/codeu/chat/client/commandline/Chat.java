@@ -23,8 +23,10 @@ import java.io.IOException;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
+import codeu.chat.client.core.ConversationInterestContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.client.core.UserInterestContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Tokenizer;
 
@@ -319,6 +321,64 @@ public final class Chat {
           }
         }
         return null;
+      }
+    });
+
+    //i-list (list interests)
+    //
+    // Add a command that will print all interests when the user enters
+    // "i-list" while on the user panel.
+    panel.register("i-list", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        System.out.println("--- conversation interests ---");
+        for (final ConversationInterestContext interest : user.conversationInterests()) {
+          System.out.format("USER : %s, CONVERSATION INTEREST : %s\n",
+                  interest.user.id,
+                  interest.conversation.title);
+        }
+      }
+    });
+
+    // i-user-add (add user interest)
+    //
+    // Add a command to add a new interest when the user enters
+    // userI-add while on the interest panel.
+    //
+    panel.register("i-user-add", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        // also needs to check that interest is not already added
+        final String name = args.size() > 0 ? args.get(0) : "";
+        if (name.length() > 0 ) {
+          final UserInterestContext interest = user.addUserInterest(name);
+          if (interest == null) {
+            System.out.println("ERROR: Failed to create new user interest");
+          }
+        } else {
+          System.out.println("ERROR: Enter valid user name");
+        }
+      }
+    });
+
+    // i-convo-add (add conversation interest)
+    //
+    // Add a command to add a new interest when the user enters
+    // convI-add while on the interest panel.
+    //
+    panel.register("i-convo-add", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        // also needs to check that interest is not already added
+        final String title = args.size() > 0 ? args.get(0) : "";
+        if (title.length() > 0 ) {
+          final ConversationInterestContext interest = user.addConversationInterest(title);
+          if (interest == null) {
+            System.out.println("ERROR: Failed to create new conversation interest");
+          }
+        } else {
+          System.out.println("ERROR: Enter valid conversation title");
+        }
       }
     });
 

@@ -15,8 +15,10 @@
 package codeu.chat.common;
 
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.util.Uuid;
 
 // SINGLES VIEW
@@ -39,8 +41,20 @@ public interface SinglesView {
 
   // FIND MESSAGE
   //
-  // Find the message whose id matches the given id. if no message's id
+  // Find the message whose id matches the given id. If no message's id
   // matches the given id, null will be returned.
   Message findMessage(Uuid id);
+
+  //FIND USER INTEREST
+  //
+  // Find the user interest whose id matches the given id. If no message's
+  // id matches the given id, null will be returned.
+  UserInterest findUserInterest(Uuid id);
+
+  // FIND CONVERSATION INTEREST
+  //
+  // Find the conversation interest whose id matched the given id. If no
+  // message matches the given id, null will be returned.
+  ConversationInterest findConversationInterest(Uuid id);
 
 }

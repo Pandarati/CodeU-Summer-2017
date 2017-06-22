@@ -23,6 +23,8 @@ import codeu.chat.common.User;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
 import codeu.chat.common.ServerInfo;
+import codeu.chat.common.UserInterest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -137,7 +139,57 @@ final class View implements BasicView {
     return messages;
   }
 
-    /** Gets the Server Information
+  // by Id, so maybe think about whether we need it
+  @Override
+  public Collection<UserInterest> getUserInterests() {
+
+    final Collection<UserInterest> interests = new ArrayList<>();
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.GET_ALL_USER_INTERESTS_REQUEST);
+     // Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_ALL_USER_INTERESTS_RESPONSE) {
+        interests.addAll(Serializers.collection(UserInterest.SERIALIZER).read(connection.in()));
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return interests;
+
+  }
+
+  // not by Id, so maybe think about whether we need it to be by Id or not
+  @Override
+  public Collection<ConversationInterest> getConversationInterests() {
+
+    final Collection<ConversationInterest> interests = new ArrayList<>();
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.GET_ALL_CONVERSATION_INTERESTS_REQUEST);
+      //Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_ALL_CONVERSATION_INTERESTS_RESPONSE) {
+        interests.addAll(Serializers.collection(ConversationInterest.SERIALIZER).read(connection.in()));
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return interests;
+
+  }
+
+  /** Gets the Server Information
      *
      *  Based on request and response time.
      *
