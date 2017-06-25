@@ -51,6 +51,9 @@ public final class Chat {
   // panel to the top of the stack. When a command wants to go to the previous
   // panel all it needs to do is pop the top panel.
   private final Stack<Panel> panels = new Stack<>();
+
+  // Map to store all the Interests in the system, for every User there is a set
+  // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
   public Chat(Context context) {
@@ -269,14 +272,12 @@ public final class Chat {
         System.out.println("      Join the conversation as the current user.");
         System.out.println(" ");
         System.out.println("  Interest Commands: ");
-        System.out.println("    i-user-add <name>");
+        System.out.println("    userI-add <name>");
         System.out.println("      Add a new interest in a given user and follow their activity.");
-        System.out.println("    i-convo-add <title>");
+        System.out.println("    convI-add <title>");
         System.out.println("      Add a new interest in a given conversation title and follow its activity.");
-        System.out.println("    i-user-update");
+        System.out.println("    status-update");
         System.out.println("      Get a status update on a user and their activity.");
-        System.out.println("    i-convo-update");
-        System.out.println("      Get a status update on a conversation and its activity.");
         System.out.println(" ");
         System.out.println("  General Commands: ");
         System.out.println("    info");
@@ -320,6 +321,7 @@ public final class Chat {
           if (conversation == null) {
             System.out.println("ERROR: Failed to create new conversation");
           } else {
+            // update User interest
             updateInterests(conversation.conversation);
             panels.push(createConversationPanel(conversation));
           }
@@ -328,16 +330,19 @@ public final class Chat {
         }
       }
 
+      // update the User interests
       private void updateInterests(ConversationHeader conversation){
         for (HashSet<Interest> interests : interestMap.values()) {
           Iterator<Interest> iterator = interests.iterator();
           while(iterator.hasNext()){
             Interest current = iterator.next();
 
+            // check if the interest is a UserInterest
             if (current.getClass() == UserInterest.class) {
+              // check if someone is interest in the current user
               if(Uuid.equals(current.interest, user.user.id))
-                System.out.println("User found");
-              current.addConversation(conversation);
+                // if so we update that user's interest
+                current.addConversation(conversation);
             }
           }
         }
@@ -393,25 +398,26 @@ public final class Chat {
       }
     });
 
-    // i-user-add (add user interest)
+    // userI-add (add user interest)
     //
     // Add a command to add a new interest when the user enters
     // userI-add while on the interest panel.
     //
-    panel.register("i-user-add", new Panel.Command() {
+    // Serena's front end code
+    panel.register("userI-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
         // also needs to check that interest is not already added
         final String name = args.size() > 0 ? args.get(0) : "";
         if (name.length() > 0 ) {
-          final UserInterestContext interestContext = user.addUserInterest(name);
           final UserContext userInterest = findUser(name);
 
           // Find the first user by entered name
-          if (interestContext == null || userInterest == null) {
+          if (userInterest == null) {
             System.out.println("ERROR: Failed to create new user interest");
           }
           else {
+            // create a user interest and add it to the current user's interests
             UserInterest interest = new UserInterest(user.user.id, userInterest.user.id, Time.now());
             interestMap.get(user.user.id).add(interest);
           }
@@ -431,24 +437,25 @@ public final class Chat {
       }
     });
 
-    // i-convo-add (add conversation interest)
+    // convI-add (add conversation interest)
     //
     // Add a command to add a new interest when the user enters
     // convI-add while on the interest panel.
     //
-    panel.register("i-convo-add", new Panel.Command() {
+    // Serena's front end code
+    panel.register("convI-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
         // also needs to check that interest is not already added
         final String title = args.size() > 0 ? args.get(0) : "";
         if (title.length() > 0 ) {
-          final ConversationInterestContext conversationContext = user.addConversationInterest(title);
           final ConversationContext conversationInterest = findConversation(title);
 
-          if (conversationContext == null || conversationInterest == null) {
+          if (conversationInterest == null) {
             System.out.println("ERROR: Failed to create new conversation interest");
           }
           else {
+            // create a conversation interest and add it to the current user's interests
             ConversationInterest interest =
                     new ConversationInterest(user.user.id, conversationInterest.conversation.id, Time.now());
             interestMap.get(user.user.id).add(interest);
@@ -468,12 +475,13 @@ public final class Chat {
       }
     });
 
-    // i-status-update (status update for a user's interests)
+    // status-update (status update for a user's interests)
     //
-    // Add a command to add a new interest when the user enters
-    // convI-add while on the interest panel.
+    // Add a command that lets the user view the update status on their
+    // interests when the use types status-update while on the interest panel.
     //
-    panel.register("i-status-update", new Panel.Command() {
+    // Serena's front end code
+    panel.register("status-update", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
 
@@ -485,11 +493,13 @@ public final class Chat {
 
           if (current.getClass() == ConversationInterest.class) {
             conversationInterests = conversationInterests + current.toString() + "\n";
+            // reset the information
             current.reset();
           }
 
           if (current.getClass() == UserInterest.class) {
             userInterests = userInterests + current.toString() + "\n";
+            // reset the information
             current.reset();
           }
         }
@@ -592,25 +602,28 @@ public final class Chat {
         }
       }
 
+      // update the both User and Conversation interests
       private void updateInterests(){
         for (HashSet<Interest> interests : interestMap.values()) {
           Iterator<Interest> iterator = interests.iterator();
           while(iterator.hasNext()){
             Interest current = iterator.next();
 
+            // check if the interest is a ConversationInterest
             if (current.getClass() == ConversationInterest.class) {
-              if (Uuid.equals(current.interest, conversation.conversation.id)) {
+              // check if someone is interested in this conversation
+              if (Uuid.equals(current.interest, conversation.conversation.id))
+                // if so we update that user's interest
                 current.updateCount();
-                System.out.println("Conversation found: ");
-              }
             }
 
+            // check if the interest is a UserInterest
             if (current.getClass() == UserInterest.class) {
+              // check if someone is interested in this user
               if(Uuid.equals(current.interest, conversation.user.id))
-                System.out.println("User found: ");
+                // if so we update that user's interest
                 current.addConversation(conversation.conversation);
             }
-
           }
         }
       }

@@ -35,12 +35,7 @@ public final class ConversationInterest extends Interest {
 
         }
     };
-    /*
-       public final Uuid id;
-       public final Uuid owner;
-       public final Uuid conversation;
-       public final Time creation;
-       */
+
     public Integer messageCount;
 
     // constructor for a User interest

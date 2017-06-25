@@ -57,9 +57,9 @@ public final class UserInterest extends Interest{
         String convos = "";
         Iterator<ConversationHeader> iterator = conversations.iterator();
         while(iterator.hasNext()){
-            convos = convos + iterator.next().title + "\n";
+            convos = convos + "\n" + iterator.next().title ;
         }
-        return "User Interest: " + owner + ", \nupdate conversations: \n" + convos;
+        return "User Interest: " + owner + ", \nupdated conversations: " + convos;
     }
 
     @Override
@@ -70,6 +70,7 @@ public final class UserInterest extends Interest{
         conversations.add(conversation);
     }
 
+    @Override
     public void reset() {
         conversations.clear();
     }
