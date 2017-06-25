@@ -27,10 +27,8 @@ import java.io.IOException;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
-import codeu.chat.client.core.ConversationInterestContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
-import codeu.chat.client.core.UserInterestContext;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Interest;
