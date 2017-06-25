@@ -28,11 +28,13 @@ import codeu.chat.util.Uuid;
 public final class UserContext {
 
   public final User user;
+  //public Interests interests;
   private final BasicView view;
   private final BasicController controller;
 
   public UserContext(User user, BasicView view, BasicController controller) {
     this.user = user;
+   // this.interests = interests;
     this.view = view;
     this.controller = controller;
   }
@@ -74,6 +76,7 @@ public final class UserContext {
       return null;
     else {
       final UserInterest interest = controller.newUserInterest(user.id, other.id);
+    //  interests.userInterests.add(interest);
       return interest == null ?
               null :
               new UserInterestContext(user, interest, other, view);
@@ -111,7 +114,7 @@ public final class UserContext {
         all.add(new UserInterestContext(
                 user,
                 interest,
-                findUser(interest.userId),
+                findUser(interest.interest),
                 view));
     //  }
     }
@@ -125,6 +128,7 @@ public final class UserContext {
       return null;
     else {
       final ConversationInterest interest = controller.newConversationInterest(user.id, conversation.id);
+     // interests.conversationInterests.add(interest);
       return interest == null ?
               null :
               new ConversationInterestContext(user, interest, conversation, view);
@@ -141,7 +145,7 @@ public final class UserContext {
         all.add(new ConversationInterestContext(
                 user,
                 interest,
-                findConversation(interest.conversation),
+                findConversation(interest.interest),
                 view));
      // }
     }

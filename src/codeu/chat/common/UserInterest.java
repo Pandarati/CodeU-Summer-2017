@@ -13,7 +13,7 @@ import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
-public final class UserInterest {
+public final class UserInterest extends Interest{
 
     public static final Serializer<UserInterest> SERIALIZER = new Serializer<UserInterest>() {
 
@@ -22,7 +22,7 @@ public final class UserInterest {
 
             Uuid.SERIALIZER.write(out, value.id);
             Uuid.SERIALIZER.write(out, value.owner);
-            Uuid.SERIALIZER.write(out, value.userId);
+            Uuid.SERIALIZER.write(out, value.interest);
             Time.SERIALIZER.write(out, value.creation);
 
         }
@@ -40,25 +40,37 @@ public final class UserInterest {
         }
     };
 
-    public final Uuid id;
-    public final Uuid owner;
-    public final Uuid userId;
-    public final Time creation;
     public Set<ConversationHeader> conversations;
 
     // constructor for a User interest
-    public UserInterest (Uuid id, Uuid owner, Uuid userId, Time creation){
-        this.id = id;
-        this.owner = owner;
-        this.userId = userId;
-        this.creation = creation;
+    public UserInterest(Uuid id, Uuid owner, Uuid userId, Time creation) {
+        super(id, owner, userId, creation);
         conversations = new HashSet<ConversationHeader>();
     }
 
-    public void printConversations (){
+    public UserInterest(Uuid owner, Uuid userId, Time creation) {
+        super(owner, userId, creation);
+        conversations = new HashSet<ConversationHeader>();
+    }
+
+    public String toString() {
+        String convos = "";
         Iterator<ConversationHeader> iterator = conversations.iterator();
         while(iterator.hasNext()){
-            System.out.println(iterator.next().title);
+            convos = convos + iterator.next().title + "\n";
         }
+        return "User Interest: " + owner + ", \nupdate conversations: \n" + convos;
+    }
+
+    @Override
+    public void updateCount(){ }
+
+    @Override
+    public void addConversation(ConversationHeader conversation){
+        conversations.add(conversation);
+    }
+
+    public void reset() {
+        conversations.clear();
     }
 }

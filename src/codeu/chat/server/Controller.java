@@ -201,7 +201,7 @@ public final class Controller implements RawController, BasicController {
         // find all UserInterests with the current user (author) as an interest and
         // add the conversation to its list
         for (final UserInterest value : model.userInterestByUserId().all()) {
-            if(Uuid.equals(author, value.userId)) {
+            if(Uuid.equals(author, value.interest)) {
                 value.conversations.add(foundConversation);
                 LOG.info("User Interest updated: " + value.conversations.toString());
             }
@@ -214,7 +214,7 @@ public final class Controller implements RawController, BasicController {
         // find all ConversationInterests with the current conversation as an interest
         // and add to its message count
         for (final ConversationInterest value : model.conversationInterestByConversationId().all()) {
-            if (Uuid.equals(conversation, value.conversation)) {
+            if (Uuid.equals(conversation, value.interest)) {
                 value.updateCount();
                 LOG.info("Conversation Interest updated: " + conversation + ", " + value.messageCount);
             }

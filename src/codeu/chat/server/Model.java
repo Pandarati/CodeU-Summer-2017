@@ -139,7 +139,7 @@ public final class Model {
   public void add(UserInterest interest) {
     userInterestById.insert(interest.id, interest);
     userInterestByOwnerId.insert(interest.owner, interest);
-    userInterestByUserId.insert(interest.userId, interest);
+    userInterestByUserId.insert(interest.interest, interest);
   }
 
   public StoreAccessor<Uuid, UserInterest> userInterestById() { return userInterestById; }
@@ -149,7 +149,7 @@ public final class Model {
   public void add(ConversationInterest interest) {
       conversationInterestById.insert(interest.id, interest);
       conversationInterestByOwnerId.insert(interest.owner, interest);
-      conversationInterestByConversationId.insert(interest.conversation, interest);
+      conversationInterestByConversationId.insert(interest.interest, interest);
   }
 
   public StoreAccessor<Uuid, ConversationInterest> conversationInterestById() { return conversationInterestById; }

@@ -18,6 +18,10 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import java.io.IOException;
 
@@ -27,8 +31,15 @@ import codeu.chat.client.core.ConversationInterestContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.client.core.UserInterestContext;
+import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConversationInterest;
+import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
+import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
+import codeu.chat.util.Time;
 import codeu.chat.util.Tokenizer;
+import codeu.chat.util.Uuid;
 
 public final class Chat {
 
@@ -40,6 +51,7 @@ public final class Chat {
   // panel to the top of the stack. When a command wants to go to the previous
   // panel all it needs to do is pop the top panel.
   private final Stack<Panel> panels = new Stack<>();
+  private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
   public Chat(Context context) {
     this.panels.push(createRootPanel(context));
@@ -163,9 +175,12 @@ public final class Chat {
       public void invoke(List<String> args) {
         final String name = args.size() > 0 ? args.get(0) : "";
         if (name.length() > 0) {
-          if (context.create(name) == null) {
+          UserContext user = context.create(name);
+          if (user == null) {
             System.out.println("ERROR: Failed to create new user");
           }
+          else
+            interestMap.put(user.user.id, new HashSet<Interest>());
         } else {
           System.out.println("ERROR: Missing <username>");
         }
@@ -305,10 +320,26 @@ public final class Chat {
           if (conversation == null) {
             System.out.println("ERROR: Failed to create new conversation");
           } else {
+            updateInterests(conversation.conversation);
             panels.push(createConversationPanel(conversation));
           }
         } else {
           System.out.println("ERROR: Missing <title>");
+        }
+      }
+
+      private void updateInterests(ConversationHeader conversation){
+        for (HashSet<Interest> interests : interestMap.values()) {
+          Iterator<Interest> iterator = interests.iterator();
+          while(iterator.hasNext()){
+            Interest current = iterator.next();
+
+            if (current.getClass() == UserInterest.class) {
+              if(Uuid.equals(current.interest, user.user.id))
+                System.out.println("User found");
+              current.addConversation(conversation);
+            }
+          }
         }
       }
     });
@@ -353,17 +384,11 @@ public final class Chat {
     panel.register("i-list", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        System.out.println("--- user interests ---");
-        for (final UserInterestContext interest : user.userInterests()) {
-          System.out.format("USER : %s, USER INTEREST : %s\n",
-                  interest.user.id,
-                  interest.other.id);
-        }
-        System.out.println("--- conversation interests ---");
-        for (final ConversationInterestContext interest : user.conversationInterests()) {
-          System.out.format("USER : %s, CONVERSATION INTEREST : %s\n",
-                  interest.user.id,
-                  interest.conversation.id);
+        for (HashSet<Interest> interests : interestMap.values()){
+          System.out.println("--- user interests ---");
+          System.out.println(interests.toString());
+          System.out.println("--- conversation interests ---");
+          System.out.println(interests.toString());
         }
       }
     });
@@ -379,13 +404,30 @@ public final class Chat {
         // also needs to check that interest is not already added
         final String name = args.size() > 0 ? args.get(0) : "";
         if (name.length() > 0 ) {
-          final UserInterestContext interest = user.addUserInterest(name);
-          if (interest == null) {
+          final UserInterestContext interestContext = user.addUserInterest(name);
+          final UserContext userInterest = findUser(name);
+
+          // Find the first user by entered name
+          if (interestContext == null || userInterest == null) {
             System.out.println("ERROR: Failed to create new user interest");
+          }
+          else {
+            UserInterest interest = new UserInterest(user.user.id, userInterest.user.id, Time.now());
+            interestMap.get(user.user.id).add(interest);
           }
         } else {
           System.out.println("ERROR: Enter valid user name");
         }
+      }
+
+      private UserContext findUser(String name) {
+        for (final UserContext other : user.users()) {
+          User otherUser = other.user;
+          if (name.equals(otherUser.name)) {
+            return other;
+          }
+        }
+        return null;
       }
     });
 
@@ -400,13 +442,29 @@ public final class Chat {
         // also needs to check that interest is not already added
         final String title = args.size() > 0 ? args.get(0) : "";
         if (title.length() > 0 ) {
-          final ConversationInterestContext interest = user.addConversationInterest(title);
-          if (interest == null) {
+          final ConversationInterestContext conversationContext = user.addConversationInterest(title);
+          final ConversationContext conversationInterest = findConversation(title);
+
+          if (conversationContext == null || conversationInterest == null) {
             System.out.println("ERROR: Failed to create new conversation interest");
+          }
+          else {
+            ConversationInterest interest =
+                    new ConversationInterest(user.user.id, conversationInterest.conversation.id, Time.now());
+            interestMap.get(user.user.id).add(interest);
           }
         } else {
           System.out.println("ERROR: Enter valid conversation title");
         }
+      }
+
+      private ConversationContext findConversation(String title) {
+        for (final ConversationContext other : user.conversations()) {
+          if (title.equals(other.conversation.title)) {
+            return other;
+          }
+        }
+        return null;
       }
     });
 
@@ -418,78 +476,31 @@ public final class Chat {
     panel.register("i-status-update", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
+
+        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
+        String userInterests = "";
+        String conversationInterests = "";
+        while(iterator.hasNext()){
+          Interest current = iterator.next();
+
+          if (current.getClass() == ConversationInterest.class) {
+            conversationInterests = conversationInterests + current.toString() + "\n";
+            current.reset();
+          }
+
+          if (current.getClass() == UserInterest.class) {
+            userInterests = userInterests + current.toString() + "\n";
+            current.reset();
+          }
+        }
+
         System.out.println("--- update: user interests ---");
-        for (final UserInterestContext interest : user.userInterests()) {
-          System.out.format("USER : %s \nUpdated conversations :\n",
-                  interest.other.id);
-          if(interest.interest.conversations.isEmpty())
-            System.out.println("no user interest activity");
-          interest.interest.printConversations();
-        }
+        System.out.println(userInterests);
         System.out.println("--- update: conversation interests ---");
-        for (final ConversationInterestContext interest : user.conversationInterests()) {
-          System.out.format("CONVERSATION : %s \nNumber of new messages : %s\n",
-                  interest.conversation.title,
-                  interest.interest.messageCount);
-        }
+        System.out.println(conversationInterests);
       }
+
     });
-
-    /*
-    // i-convo-update (update a conversation interest)
-    //
-    // Add a command to add a new interest when the user enters
-    // convI-add while on the interest panel.
-    //
-    panel.register("i-convo-update", new Panel.Command() {
-      @Override
-      public void invoke(List<String> args) {
-        final String title = args.size() > 0 ? args.get(0) : "";
-        if (title.length() > 0) {
-          final ConversationInterestContext conversationInterest = findConversationInterest(title);
-          final ConversationContext conversation = findConversation(title);
-
-          if (conversationInterest != null && conversation != null) {
-              System.out.println("--- start of conversation ---");
-              for (MessageContext message = conversation.firstMessage();
-                   message != null;
-                   message = message.next()) {
-                System.out.println();
-                System.out.format("USER : %s\n", message.message.author);
-                System.out.format("SENT : %s\n", message.message.creation);
-                System.out.println();
-                System.out.println(message.message.content);
-                System.out.println();
-              }
-              System.out.println("Number of missed Messages: " + conversationInterest.interest.messageCount);
-              System.out.println("---  end of conversation  ---");
-            } else {
-            System.out.format("ERROR: No conversation or no interest found");
-          }
-        } else {
-          System.out.println("ERROR: Missing conversation <title>");
-        }
-      }
-
-      private ConversationContext findConversation(String title) {
-        for (final ConversationContext conversation : user.conversations()) {
-          if (title.equals(conversation.conversation.title)) {
-            return conversation;
-          }
-        }
-        return null;
-      }
-
-      private ConversationInterestContext findConversationInterest(String title) {
-        for (final ConversationInterestContext conversationInterest : user.conversationInterests()) {
-         if (title.equals(conversationInterest.conversation.title)) {
-           return conversationInterest;
-          }
-        }
-       return null;
-      }
-    });
-    */
 
     // INFO
     //
@@ -575,8 +586,32 @@ public final class Chat {
         final String message = args.size() > 0 ? args.get(0) : "";
         if (message.length() > 0) {
           conversation.add(message);
+          updateInterests();
         } else {
           System.out.println("ERROR: Messages must contain text");
+        }
+      }
+
+      private void updateInterests(){
+        for (HashSet<Interest> interests : interestMap.values()) {
+          Iterator<Interest> iterator = interests.iterator();
+          while(iterator.hasNext()){
+            Interest current = iterator.next();
+
+            if (current.getClass() == ConversationInterest.class) {
+              if (Uuid.equals(current.interest, conversation.conversation.id)) {
+                current.updateCount();
+                System.out.println("Conversation found: ");
+              }
+            }
+
+            if (current.getClass() == UserInterest.class) {
+              if(Uuid.equals(current.interest, conversation.user.id))
+                System.out.println("User found: ");
+                current.addConversation(conversation.conversation);
+            }
+
+          }
         }
       }
     });
