@@ -15,13 +15,6 @@
 
 package codeu.chat.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
@@ -30,8 +23,26 @@ import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
 import codeu.chat.common.ServerInfo;
-import codeu.chat.util.*;
+import codeu.chat.util.LogReader;
+import codeu.chat.util.Logger;
+import codeu.chat.util.Serializers;
+import codeu.chat.util.Time;
+import codeu.chat.util.Timeline;
+import codeu.chat.util.Uuid;
+import codeu.chat.util.LogLoader;
 import codeu.chat.util.connections.Connection;
+
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class Server {
 
@@ -60,12 +71,62 @@ public final class Server {
   //Creates an instance of ServerInfo that helps keep the Time and version of when the server started
   private static ServerInfo serverInfo;
 
-  public Server(final Uuid id, final Secret secret, final Relay relay) {
+  //Log Files Info
+  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
+  public PrintWriter outputStream;
+  LogReader logReader;
+
+  //Store the lines of Log
+  ArrayList<String> fileLines;
+
+  public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException{
 
     this.id = id;
     this.secret = secret;
     this.controller = new Controller(id, model);
     this.relay = relay;
+
+
+    //Connects the Log to the Server
+    try {
+        outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
+    }catch (FileNotFoundException e){
+      e.printStackTrace();
+    }
+
+    //Set-ups OutputStream to append to current Log Information
+    outputStream.append("");
+    outputStream.flush();
+
+    //Reads in the Log and stores the lines in an ArrayList
+    logReader = new LogReader();
+    fileLines = logReader.readFile();
+
+    //Loads in the fileLines from the Log
+    for(int i = 0; i < fileLines.size(); i++){
+      LogLoader logLoader = new LogLoader(fileLines.get(i));
+
+      //Load in User
+      if(logLoader.findCommmand().equals("U")){
+        String[] userInfo = logLoader.loadUser();
+        this.controller.newUser(Uuid.parse(userInfo[0]), userInfo[1], Time.now());
+      }
+      //Load in Conversation
+      else if(logLoader.findCommmand().equals("C")){
+        String[] userInfo = logLoader.loadConversation();
+        this.controller.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.fromMs(Long.parseLong(userInfo[3])));
+      }
+      //Load in Message
+      else if(logLoader.findCommmand().equals("M")){
+        String[] userInfo = logLoader.loadMessage();
+        this.controller.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.fromMs(Long.parseLong(userInfo[2])));
+      }
+
+    }
+
+    //We finished Loading the Log(This is so we don't rewrite to the log stuff that's already in it)
+    controller.finishedLoadingLog = true;
+
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -85,6 +146,8 @@ public final class Server {
             author,
             conversation,
             message.id));
+
+
       }
     });
 
@@ -98,6 +161,8 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
         Serializers.nullable(User.SERIALIZER).write(out, user);
+
+
       }
     });
 
