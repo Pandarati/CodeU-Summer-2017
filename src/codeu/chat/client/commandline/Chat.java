@@ -120,14 +120,19 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         System.out.println("ROOT MODE");
-        System.out.println("  u-list");
-        System.out.println("    List all users.");
-        System.out.println("  u-add <name>");
-        System.out.println("    Add a new user with the given name.");
-        System.out.println("  u-sign-in <name>");
-        System.out.println("    Sign in as the user with the given name.");
-        System.out.println("  exit");
-        System.out.println("    Exit the program.");
+        System.out.println(" ");
+        System.out.println("  User Commands: ");
+        System.out.println("    u-list");
+        System.out.println("      List all users.");
+        System.out.println("    u-add <name>");
+        System.out.println("      Add a new user with the given name.");
+        System.out.println("    u-sign-in <name>");
+        System.out.println("      Sign in as the user with the given name.");
+        System.out.println(" ");
+        System.out.println("  General Commands: ");
+        System.out.println("    exit");
+        System.out.println("      Exit the program.");
+        System.out.println(" ");
       }
     });
 
@@ -237,28 +242,35 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         System.out.println("USER MODE");
-        System.out.println("  c-list");
-        System.out.println("    List all conversations that the current user can interact with.");
-        System.out.println("  i-list");
-        System.out.println("    List all interests that the current user can interact with.");
-        System.out.println("  c-add <title>");
-        System.out.println("    Add a new conversation with the given title and join it as the current user.");
-        System.out.println("  c-join <title>");
-        System.out.println("    Join the conversation as the current user.");
-        System.out.println("  i-user-add <name>");
-        System.out.println("    Add a new interest in a given user and follow their activity.");
-        System.out.println("  i-convo-add <title>");
-        System.out.println("    Add a new interest in a given conversation title and follow its activity.");
-        System.out.println("  i-user-update");
-        System.out.println("    Get a status update on a user and their activity.");
-        System.out.println("  i-convo-update");
-        System.out.println("    Get a status update on a conversation and its activity.");
-        System.out.println("  info");
-        System.out.println("    Display all info for the current user");
-        System.out.println("  back");
-        System.out.println("    Go back to ROOT MODE.");
-        System.out.println("  exit");
-        System.out.println("    Exit the program.");
+        System.out.println(" ");
+        System.out.println("  Conversation Commands: ");
+        System.out.println("    c-list");
+        System.out.println("      List all conversations that the current user can interact with.");
+        System.out.println("    i-list");
+        System.out.println("      List all interests that the current user can interact with.");
+        System.out.println("    c-add <title>");
+        System.out.println("      Add a new conversation with the given title and join it as the current user.");
+        System.out.println("    c-join <title>");
+        System.out.println("      Join the conversation as the current user.");
+        System.out.println(" ");
+        System.out.println("  Interest Commands: ");
+        System.out.println("    i-user-add <name>");
+        System.out.println("      Add a new interest in a given user and follow their activity.");
+        System.out.println("    i-convo-add <title>");
+        System.out.println("      Add a new interest in a given conversation title and follow its activity.");
+        System.out.println("    i-user-update");
+        System.out.println("      Get a status update on a user and their activity.");
+        System.out.println("    i-convo-update");
+        System.out.println("      Get a status update on a conversation and its activity.");
+        System.out.println(" ");
+        System.out.println("  General Commands: ");
+        System.out.println("    info");
+        System.out.println("      Display all info for the current user");
+        System.out.println("    back");
+        System.out.println("      Go back to ROOT MODE.");
+        System.out.println("    exit");
+        System.out.println("      Exit the program.");
+        System.out.println(" ");
       }
     });
 
@@ -511,16 +523,21 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         System.out.println("USER MODE");
-        System.out.println("  m-list");
-        System.out.println("    List all messages in the current conversation.");
-        System.out.println("  m-add <message>");
-        System.out.println("    Add a new message to the current conversation as the current user.");
-        System.out.println("  info");
-        System.out.println("    Display all info about the current conversation.");
-        System.out.println("  back");
-        System.out.println("    Go back to USER MODE.");
-        System.out.println("  exit");
-        System.out.println("    Exit the program.");
+        System.out.println(" ");
+        System.out.println("  Message Commands: ");
+        System.out.println("    m-list");
+        System.out.println("      List all messages in the current conversation.");
+        System.out.println("    m-add <message>");
+        System.out.println("      Add a new message to the current conversation as the current user.");
+        System.out.println("    info");
+        System.out.println("      Display all info about the current conversation.");
+        System.out.println(" ");
+        System.out.println("  General Commands: ");
+        System.out.println("    back");
+        System.out.println("      Go back to USER MODE.");
+        System.out.println("    exit");
+        System.out.println("      Exit the program.");
+        System.out.println(" ");
       }
     });
 
