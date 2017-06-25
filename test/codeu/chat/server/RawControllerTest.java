@@ -22,6 +22,8 @@ import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
@@ -124,4 +126,69 @@ public final class RawControllerTest {
         "Check that the message has the correct id",
         Uuid.equals(message.id, messageId));
   }
+
+  @Test
+  public void testAddUserInterest() {
+    final User ownerUser = controller.newUser(userId, "owner-user", Time.now());
+
+    assertFalse(
+        "Check that user has a valid reference",
+        ownerUser == null);
+    assertTrue(
+        "Check that the user has the correct id",
+        Uuid.equals(ownerUser.id, userId));
+
+    final User interestUser = controller.newUser(userId, "interest-user", Time.now());
+
+    assertFalse(
+        "Check that user has a valid reference",
+        interestUser == null);
+    assertTrue(
+        "Check that the user has the correct id",
+        Uuid.equals(interestUser.id, userId));
+
+
+    final UserInterest interest = controller.newUserInterest(userId,
+      ownerUser.id, interestUser.id, Time.now());
+
+    assertFalse(
+        "Check that the user interest has a valid reference",
+        interest == null);
+  }
+
+  @Test
+  public void testAddConversationInterest() {
+    final User user = controller.newUser(userId, "user", Time.now());
+
+    assertFalse(
+        "Check that user has a valid reference",
+        user == null);
+    assertTrue(
+        "Check that the user has the correct id",
+        Uuid.equals(user.id, userId));
+
+    final ConversationHeader conversation = controller.newConversation(
+        conversationId,
+        "conversation",
+        user.id,
+        Time.now());
+
+    assertFalse(
+        "Check that conversation has a valid reference",
+        conversation == null);
+    assertTrue(
+        "Check that the conversation has the correct id",
+        Uuid.equals(conversation.id, conversationId));
+
+
+    final ConversationInterest interest = controller.newConversationInterest(conversationId,
+      user.id, conversation.id, Time.now());
+
+    assertFalse(
+        "Check that the conversation interest has a valid reference",
+        interest == null);
+  }
+
+
+
 }
