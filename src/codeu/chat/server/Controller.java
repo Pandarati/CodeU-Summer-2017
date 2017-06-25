@@ -25,10 +25,12 @@ import java.util.TimerTask;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
@@ -83,6 +85,16 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
+  public UserInterest newUserInterest(Uuid owner, Uuid userId) {
+    return newUserInterest(createId(), owner, userId, Time.now());
+  }
+
+  @Override
+  public ConversationInterest newConversationInterest(Uuid owner, Uuid conversation) {
+      return newConversationInterest(createId(), owner, conversation, Time.now());
+  }
+
+  @Override
   public Message newMessage(Uuid id, Uuid author, Uuid conversation, String body, Time creationTime) {
 
     final User foundUser = model.userById().first(author);
@@ -95,6 +107,9 @@ public final class Controller implements RawController, BasicController {
       message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
       model.add(message);
       LOG.info("Message added: %s", message.id);
+
+      updateConversationInterests(conversation);
+      updateUserInterests(author, conversation);
 
       // Find and update the previous "last" message so that it's "next" value
       // will point to the new message.
@@ -175,6 +190,8 @@ public final class Controller implements RawController, BasicController {
       conversation = new ConversationHeader(id, owner, creationTime, title);
       model.add(conversation);
       LOG.info("Conversation added: " + id);
+
+      updateUserInterests(owner, conversation.id);
     }
 
     //After recreating the state of the server, start storing the newConversation() command calls.
@@ -184,6 +201,67 @@ public final class Controller implements RawController, BasicController {
 
     return conversation;
   }
+
+  @Override
+    public UserInterest newUserInterest(Uuid id, Uuid owner, Uuid userId, Time creationTime){
+
+        final User foundUser = model.userById().first(owner);
+        final User interestUser = model.userById().first(userId);
+
+        UserInterest interest = null;
+
+        if(foundUser != null && interestUser != null && isIdFree(id)) {
+            interest = new UserInterest(id, owner, userId, creationTime);
+            model.add(interest);
+            LOG.info("User interest added: " + id);
+        }
+
+        return interest;
+    }
+
+    @Override
+    public ConversationInterest newConversationInterest(Uuid id, Uuid owner, Uuid conversation, Time creationTime){
+
+        final User foundUser = model.userById().first(owner);
+        final ConversationHeader foundConversation = model.conversationById().first(conversation);
+
+        ConversationInterest interest = null;
+
+        if(foundUser != null && foundConversation != null && isIdFree(id)) {
+            interest = new ConversationInterest(id, owner, conversation, creationTime);
+            model.add(interest);
+            LOG.info("Conversation interest added: " + id);
+        }
+
+        return interest;
+    }
+
+    private void updateUserInterests(Uuid author, Uuid conversation){
+        final ConversationHeader foundConversation = model.conversationById().first(conversation);
+        LOG.info("Current Conversation: " + foundConversation.title);
+
+        // find all UserInterests with the current user (author) as an interest and
+        // add the conversation to its list
+        for (final UserInterest value : model.userInterestByUserId().all()) {
+            if(Uuid.equals(author, value.interest)) {
+                value.conversations.add(foundConversation);
+                LOG.info("User Interest updated: " + value.conversations.toString());
+            }
+        }
+    }
+
+    private void updateConversationInterests(Uuid conversation){
+       // final ConversationHeader foundConversation = model.conversationById().first(conversation);
+
+        // find all ConversationInterests with the current conversation as an interest
+        // and add to its message count
+        for (final ConversationInterest value : model.conversationInterestByConversationId().all()) {
+            if (Uuid.equals(conversation, value.interest)) {
+                value.updateCount();
+                LOG.info("Conversation Interest updated: " + conversation + ", " + value.messageCount);
+            }
+        }
+    }
 
   private Uuid createId() {
 

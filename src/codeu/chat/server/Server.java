@@ -17,11 +17,13 @@ package codeu.chat.server;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.LogReader;
 import codeu.chat.util.Logger;
@@ -180,6 +182,34 @@ public final class Server {
       }
     });
 
+    // New Interest - A client wants to add a new interest in a user to the back end.
+    this.commands.put(NetworkCode.NEW_USER_INTEREST_REQUEST,  new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Uuid owner = Uuid.SERIALIZER.read(in);
+            final Uuid userId = Uuid.SERIALIZER.read(in);
+            final UserInterest interest = controller.newUserInterest(owner, userId);
+
+            Serializers.INTEGER.write(out, NetworkCode.NEW_USER_INTEREST_RESPONSE);
+            Serializers.nullable(UserInterest.SERIALIZER).write(out, interest);
+        }
+    });
+
+    // New Interest - A client wants to add a new interest in a conversation to the back end
+    this.commands.put(NetworkCode.NEW_CONVERSATION_INTEREST_REQUEST,  new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Uuid owner = Uuid.SERIALIZER.read(in);
+            final Uuid conversationId = Uuid.SERIALIZER.read(in);
+            final ConversationInterest interest = controller.newConversationInterest(owner, conversationId);
+
+            Serializers.INTEGER.write(out, NetworkCode.NEW_CONVERSATION_INTEREST_RESPONSE);
+            Serializers.nullable(ConversationInterest.SERIALIZER).write(out, interest);
+        }
+    });
+
     // Get Users - A client wants to get all the users from the back end.
     this.commands.put(NetworkCode.GET_USERS_REQUEST, new Command() {
       @Override
@@ -204,6 +234,30 @@ public final class Server {
       }
     });
 
+    // Get User Interests - A client wants to get all the user interests from the back end.
+    this.commands.put(NetworkCode.GET_ALL_USER_INTERESTS_REQUEST, new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Collection<UserInterest> userInterests = view.getUserInterests();
+
+            Serializers.INTEGER.write(out, NetworkCode.GET_ALL_USER_INTERESTS_RESPONSE);
+            Serializers.collection(UserInterest.SERIALIZER).write(out, userInterests);
+          }
+      });
+
+    // Get Conversation Interests - A client wants to get all the conversation interests from the back end.
+    this.commands.put(NetworkCode.GET_ALL_CONVERSATION_INTERESTS_REQUEST, new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Collection<ConversationInterest> conversationInterests = view.getConversationInterests();
+
+            Serializers.INTEGER.write(out, NetworkCode.GET_ALL_CONVERSATION_INTERESTS_RESPONSE);
+            Serializers.collection(ConversationInterest.SERIALIZER).write(out, conversationInterests);
+          }
+      });
+
     // Get Server Request - A client whats to get all the request to the server from the back end.
     this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command(){
         @Override
@@ -217,8 +271,7 @@ public final class Server {
               LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
-
-            //Writes out the ServerInfo Version and StartTime to the user!
+            // Writes out the ServerInfo Version and StartTime to the user!
             Uuid.SERIALIZER.write(out, serverInfo.version);
             Time.SERIALIZER.write(out, serverInfo.startTime);
         }
@@ -255,6 +308,9 @@ public final class Server {
         Serializers.collection(Message.SERIALIZER).write(out, messages);
       }
     });
+
+    // add status update commands
+      // view.statusUpdate
 
     this.timeline.scheduleNow(new Runnable() {
       @Override

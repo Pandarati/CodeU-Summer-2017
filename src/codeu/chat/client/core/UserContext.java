@@ -20,7 +20,9 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.util.Uuid;
 
 public final class UserContext {
@@ -35,11 +37,22 @@ public final class UserContext {
     this.controller = controller;
   }
 
+  public Iterable<UserContext> users() {
+
+    // Use all the ids to get all users and convert them to User Contexts.
+    final Collection<UserContext> all = new ArrayList<>();
+    for (final User other : view.getUsers()) {
+      all.add(new UserContext(other, view, controller));
+    }
+
+    return all;
+  }
+
   public ConversationContext start(String name) {
     final ConversationHeader conversation = controller.newConversation(name, user.id);
     return conversation == null ?
-        null :
-        new ConversationContext(user, conversation, view, controller);
+          null :
+          new ConversationContext(user, conversation, view, controller);
   }
 
   public Iterable<ConversationContext> conversations() {

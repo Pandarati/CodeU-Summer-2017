@@ -21,9 +21,11 @@ import java.util.HashSet;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.SinglesView;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Uuid;
@@ -61,6 +63,14 @@ public final class View implements BasicView, SinglesView {
   }
 
   @Override
+  public Collection<UserInterest> getUserInterests() { return  all(model.userInterestById()); }
+
+  @Override
+  public Collection<ConversationInterest> getConversationInterests() {
+    return all(model.conversationInterestById());
+  }
+
+  @Override
   public User findUser(Uuid id) { return model.userById().first(id); }
 
   @Override
@@ -68,6 +78,12 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public Message findMessage(Uuid id) { return model.messageById().first(id); }
+
+  @Override
+  public UserInterest findUserInterest(Uuid id) { return model.userInterestById().first(id); }
+
+  @Override
+  public ConversationInterest findConversationInterest(Uuid id) { return model.conversationInterestById().first(id); }
 
   private static <S,T> Collection<T> all(StoreAccessor<S,T> store) {
 
@@ -79,7 +95,6 @@ public final class View implements BasicView, SinglesView {
 
     return all;
   }
-
 
   private static <T> Collection<T> intersect(StoreAccessor<Uuid, T> store, Collection<Uuid> ids) {
 
