@@ -23,15 +23,4 @@ public final class UserInterestContext {
         this.view = view;
     }
 
-    //public UserInterestContext next() { return interest.next == null ? null : getInterest(interest.next) }
-
-   // public InterestContext previous() {
-     //   return interest.previous == null ? null : getInterest(interest.previous);
-   // }
-/*
-    private UserInterestContext getInterest(Uuid id) {
-        final Iterator<UserInterest> interests = view.getUserInterests(Arrays.asList(id)).iterator();
-        return interests.hasNext() ? new UserInterestContext(interests.next(), view) : null;
-    }*/
-
 }

@@ -239,10 +239,20 @@ public final class Chat {
         System.out.println("USER MODE");
         System.out.println("  c-list");
         System.out.println("    List all conversations that the current user can interact with.");
+        System.out.println("  i-list");
+        System.out.println("    List all interests that the current user can interact with.");
         System.out.println("  c-add <title>");
         System.out.println("    Add a new conversation with the given title and join it as the current user.");
         System.out.println("  c-join <title>");
         System.out.println("    Join the conversation as the current user.");
+        System.out.println("  i-user-add <name>");
+        System.out.println("    Add a new interest in a given user and follow their activity.");
+        System.out.println("  i-convo-add <title>");
+        System.out.println("    Add a new interest in a given conversation title and follow its activity.");
+        System.out.println("  i-user-update");
+        System.out.println("    Get a status update on a user and their activity.");
+        System.out.println("  i-convo-update");
+        System.out.println("    Get a status update on a conversation and its activity.");
         System.out.println("  info");
         System.out.println("    Display all info for the current user");
         System.out.println("  back");
@@ -331,11 +341,17 @@ public final class Chat {
     panel.register("i-list", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
+        System.out.println("--- user interests ---");
+        for (final UserInterestContext interest : user.userInterests()) {
+          System.out.format("USER : %s, USER INTEREST : %s\n",
+                  interest.user.id,
+                  interest.other.id);
+        }
         System.out.println("--- conversation interests ---");
         for (final ConversationInterestContext interest : user.conversationInterests()) {
           System.out.format("USER : %s, CONVERSATION INTEREST : %s\n",
                   interest.user.id,
-                  interest.conversation.title);
+                  interest.conversation.id);
         }
       }
     });
@@ -381,6 +397,87 @@ public final class Chat {
         }
       }
     });
+
+    // i-status-update (status update for a user's interests)
+    //
+    // Add a command to add a new interest when the user enters
+    // convI-add while on the interest panel.
+    //
+    panel.register("i-status-update", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        System.out.println("--- update: user interests ---");
+        for (final UserInterestContext interest : user.userInterests()) {
+          System.out.format("USER : %s \nUpdated conversations :\n",
+                  interest.other.id);
+          if(interest.interest.conversations.isEmpty())
+            System.out.println("no user interest activity");
+          interest.interest.printConversations();
+        }
+        System.out.println("--- update: conversation interests ---");
+        for (final ConversationInterestContext interest : user.conversationInterests()) {
+          System.out.format("CONVERSATION : %s \nNumber of new messages : %s\n",
+                  interest.conversation.title,
+                  interest.interest.messageCount);
+        }
+      }
+    });
+
+    /*
+    // i-convo-update (update a conversation interest)
+    //
+    // Add a command to add a new interest when the user enters
+    // convI-add while on the interest panel.
+    //
+    panel.register("i-convo-update", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String title = args.size() > 0 ? args.get(0) : "";
+        if (title.length() > 0) {
+          final ConversationInterestContext conversationInterest = findConversationInterest(title);
+          final ConversationContext conversation = findConversation(title);
+
+          if (conversationInterest != null && conversation != null) {
+              System.out.println("--- start of conversation ---");
+              for (MessageContext message = conversation.firstMessage();
+                   message != null;
+                   message = message.next()) {
+                System.out.println();
+                System.out.format("USER : %s\n", message.message.author);
+                System.out.format("SENT : %s\n", message.message.creation);
+                System.out.println();
+                System.out.println(message.message.content);
+                System.out.println();
+              }
+              System.out.println("Number of missed Messages: " + conversationInterest.interest.messageCount);
+              System.out.println("---  end of conversation  ---");
+            } else {
+            System.out.format("ERROR: No conversation or no interest found");
+          }
+        } else {
+          System.out.println("ERROR: Missing conversation <title>");
+        }
+      }
+
+      private ConversationContext findConversation(String title) {
+        for (final ConversationContext conversation : user.conversations()) {
+          if (title.equals(conversation.conversation.title)) {
+            return conversation;
+          }
+        }
+        return null;
+      }
+
+      private ConversationInterestContext findConversationInterest(String title) {
+        for (final ConversationInterestContext conversationInterest : user.conversationInterests()) {
+         if (title.equals(conversationInterest.conversation.title)) {
+           return conversationInterest;
+          }
+        }
+       return null;
+      }
+    });
+    */
 
     // INFO
     //

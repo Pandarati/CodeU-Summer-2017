@@ -37,6 +37,17 @@ public final class UserContext {
     this.controller = controller;
   }
 
+  public Iterable<UserContext> users() {
+
+    // Use all the ids to get all users and convert them to User Contexts.
+    final Collection<UserContext> all = new ArrayList<>();
+    for (final User other : view.getUsers()) {
+      all.add(new UserContext(other, view, controller));
+    }
+
+    return all;
+  }
+
   public ConversationContext start(String name) {
     final ConversationHeader conversation = controller.newConversation(name, user.id);
     return conversation == null ?
@@ -92,15 +103,17 @@ public final class UserContext {
 
   public Iterable<UserInterestContext> userInterests() {
 
-    // Use all the ids to get all the user interests and convert them to
+    // Use all the ids to get all the current user's interests and convert them to
     // User Interest Contexts.
     final Collection<UserInterestContext> all = new ArrayList<>();
     for (final UserInterest interest : view.getUserInterests()) {
-      all.add(new UserInterestContext(
-              user,
-              interest,
-              findUser(interest.userId),
-              view));
+     // if (Uuid.equals(user.id, interest.owner)) {
+        all.add(new UserInterestContext(
+                user,
+                interest,
+                findUser(interest.userId),
+                view));
+    //  }
     }
     return all;
   }
@@ -120,15 +133,17 @@ public final class UserContext {
 
   public Iterable<ConversationInterestContext> conversationInterests() {
 
-    // Use all the ids to get all the conversation interests and convert them to
+    // Use all the ids to get all current user's conversation interests and convert them to
     // Conversation Interest Contexts.
     final Collection<ConversationInterestContext> all = new ArrayList<>();
     for (final ConversationInterest interest : view.getConversationInterests()) {
-      all.add(new ConversationInterestContext(
-              user,
-              interest,
-              findConversation(interest.conversation),
-              view));
+     // if (Uuid.equals(user.id, interest.owner)) {
+        all.add(new ConversationInterestContext(
+                user,
+                interest,
+                findConversation(interest.conversation),
+                view));
+     // }
     }
     return all;
   }

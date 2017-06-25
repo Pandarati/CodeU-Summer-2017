@@ -24,18 +24,4 @@ public final class ConversationInterestContext {
         this.conversation = conversation;
         this.view = view;
     }
-
-    /*
-    public ConversationInterestContext next() {
-        return interest.next == null ? null : getInterest(interest.next)
-    }
-
-    public ConversationInterestContext previous() {
-        return interest.previous == null ? null : getInterest(interest.previous);
-    }
-
-    private ConversationInterestContext getInterest(Uuid id) {
-        final Iterator<UserInterest> interests = view.getConversationInterests(Arrays.asList(id)).iterator();
-        return interests.hasNext() ? new ConversationInterestContext(user, interests.next(), conversation, view) : null;
-    }*/
 }

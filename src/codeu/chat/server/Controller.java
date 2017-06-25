@@ -80,6 +80,9 @@ public final class Controller implements RawController, BasicController {
       model.add(message);
       LOG.info("Message added: %s", message.id);
 
+      updateConversationInterests(conversation);
+      updateUserInterests(author, conversation);
+
       // Find and update the previous "last" message so that it's "next" value
       // will point to the new message.
 
@@ -150,6 +153,8 @@ public final class Controller implements RawController, BasicController {
       conversation = new ConversationHeader(id, owner, creationTime, title);
       model.add(conversation);
       LOG.info("Conversation added: " + id);
+
+      updateUserInterests(owner, conversation.id);
     }
 
     return conversation;
@@ -176,7 +181,7 @@ public final class Controller implements RawController, BasicController {
     public ConversationInterest newConversationInterest(Uuid id, Uuid owner, Uuid conversation, Time creationTime){
 
         final User foundUser = model.userById().first(owner);
-        final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
+        final ConversationHeader foundConversation = model.conversationById().first(conversation);
 
         ConversationInterest interest = null;
 
@@ -187,6 +192,33 @@ public final class Controller implements RawController, BasicController {
         }
 
         return interest;
+    }
+
+    private void updateUserInterests(Uuid author, Uuid conversation){
+        final ConversationHeader foundConversation = model.conversationById().first(conversation);
+        LOG.info("Current Conversation: " + foundConversation.title);
+
+        // find all UserInterests with the current user (author) as an interest and
+        // add the conversation to its list
+        for (final UserInterest value : model.userInterestByUserId().all()) {
+            if(Uuid.equals(author, value.userId)) {
+                value.conversations.add(foundConversation);
+                LOG.info("User Interest updated: " + value.conversations.toString());
+            }
+        }
+    }
+
+    private void updateConversationInterests(Uuid conversation){
+       // final ConversationHeader foundConversation = model.conversationById().first(conversation);
+
+        // find all ConversationInterests with the current conversation as an interest
+        // and add to its message count
+        for (final ConversationInterest value : model.conversationInterestByConversationId().all()) {
+            if (Uuid.equals(conversation, value.conversation)) {
+                value.updateCount();
+                LOG.info("Conversation Interest updated: " + conversation + ", " + value.messageCount);
+            }
+        }
     }
 
   private Uuid createId() {

@@ -169,6 +169,30 @@ public final class Server {
       }
     });
 
+    // Get User Interests - A client wants to get all the user interests from the back end.
+    this.commands.put(NetworkCode.GET_ALL_USER_INTERESTS_REQUEST, new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Collection<UserInterest> userInterests = view.getUserInterests();
+
+            Serializers.INTEGER.write(out, NetworkCode.GET_ALL_USER_INTERESTS_RESPONSE);
+            Serializers.collection(UserInterest.SERIALIZER).write(out, userInterests);
+          }
+      });
+
+    // Get Conversation Interests - A client wants to get all the conversation interests from the back end.
+    this.commands.put(NetworkCode.GET_ALL_CONVERSATION_INTERESTS_REQUEST, new Command() {
+        @Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+            final Collection<ConversationInterest> conversationInterests = view.getConversationInterests();
+
+            Serializers.INTEGER.write(out, NetworkCode.GET_ALL_CONVERSATION_INTERESTS_RESPONSE);
+            Serializers.collection(ConversationInterest.SERIALIZER).write(out, conversationInterests);
+          }
+      });
+
     // Get Server Request - A client whats to get all the request to the server from the back end.
     this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command(){
         @Override

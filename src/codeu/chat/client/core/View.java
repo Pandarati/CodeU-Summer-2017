@@ -139,7 +139,7 @@ final class View implements BasicView {
     return messages;
   }
 
-  // by Id, so maybe think about whether we need it
+  // not by Id, so maybe think about whether we need it or not
   @Override
   public Collection<UserInterest> getUserInterests() {
 

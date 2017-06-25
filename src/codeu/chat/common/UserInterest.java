@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
-public class UserInterest {
+public final class UserInterest {
 
     public static final Serializer<UserInterest> SERIALIZER = new Serializer<UserInterest>() {
 
@@ -40,6 +44,7 @@ public class UserInterest {
     public final Uuid owner;
     public final Uuid userId;
     public final Time creation;
+    public Set<ConversationHeader> conversations;
 
     // constructor for a User interest
     public UserInterest (Uuid id, Uuid owner, Uuid userId, Time creation){
@@ -47,5 +52,13 @@ public class UserInterest {
         this.owner = owner;
         this.userId = userId;
         this.creation = creation;
+        conversations = new HashSet<ConversationHeader>();
+    }
+
+    public void printConversations (){
+        Iterator<ConversationHeader> iterator = conversations.iterator();
+        while(iterator.hasNext()){
+            System.out.println(iterator.next().title);
+        }
     }
 }

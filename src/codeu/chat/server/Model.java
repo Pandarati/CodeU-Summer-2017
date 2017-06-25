@@ -70,8 +70,12 @@ public final class Model {
   private final Store<String, Message> messageByText = new Store<>(STRING_COMPARE);
 
   private final Store<Uuid, UserInterest> userInterestById = new Store<>(UUID_COMPARE);
+  private final Store<Uuid, UserInterest> userInterestByOwnerId = new Store<>(UUID_COMPARE);
+  private final Store<Uuid, UserInterest> userInterestByUserId = new Store<>(UUID_COMPARE);
 
   private final Store<Uuid, ConversationInterest> conversationInterestById = new Store<>(UUID_COMPARE);
+  private final Store<Uuid, ConversationInterest> conversationInterestByOwnerId = new Store<>(UUID_COMPARE);
+  private final Store<Uuid, ConversationInterest> conversationInterestByConversationId = new Store<>(UUID_COMPARE);
 
   public void add(User user) {
     userById.insert(user.id, user);
@@ -134,14 +138,24 @@ public final class Model {
 
   public void add(UserInterest interest) {
     userInterestById.insert(interest.id, interest);
+    userInterestByOwnerId.insert(interest.owner, interest);
+    userInterestByUserId.insert(interest.userId, interest);
   }
 
   public StoreAccessor<Uuid, UserInterest> userInterestById() { return userInterestById; }
 
+  public StoreAccessor<Uuid, UserInterest> userInterestByUserId() { return userInterestByUserId; }
+
   public void add(ConversationInterest interest) {
       conversationInterestById.insert(interest.id, interest);
+      conversationInterestByOwnerId.insert(interest.owner, interest);
+      conversationInterestByConversationId.insert(interest.conversation, interest);
   }
 
   public StoreAccessor<Uuid, ConversationInterest> conversationInterestById() { return conversationInterestById; }
+
+  public StoreAccessor<Uuid, ConversationInterest> conversationInterestByConversationId() {
+      return conversationInterestByConversationId;
+  }
 
 }
