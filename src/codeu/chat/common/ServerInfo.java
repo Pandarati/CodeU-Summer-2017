@@ -10,9 +10,9 @@ import java.io.IOException;
 
 public final class ServerInfo {
 
-    public Time startTime;
-    private final static String SERVER_VERSION = "1.0.0";
-    public Uuid version;
+    public final Time startTime;
+    private final static String SERVER_VERSION = "1.2.3";
+    public final Uuid version;
 
     // This is the default constructor used to create a ServerInfo with current time
     public ServerInfo() throws IOException {
@@ -38,4 +38,9 @@ public final class ServerInfo {
         this.startTime = startTime;
         this.version = version;
     }
+
+    public String getVersion() {
+        return SERVER_VERSION;
+    }
+
 }

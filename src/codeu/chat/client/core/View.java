@@ -195,6 +195,7 @@ final class View implements BasicView {
      *
      *  @return ServerInfo(startTime, version)
      */
+  @Override
   public ServerInfo getInfo(){
     try(final Connection connection = source.connect()){
         Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);

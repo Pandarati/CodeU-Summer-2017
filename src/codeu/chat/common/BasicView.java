@@ -57,4 +57,10 @@ public interface BasicView {
   //
   //  Return all conversation interests whose id is found in the given collection.
   Collection<ConversationInterest> getConversationInterests();
+
+  // GET INFO
+  //
+  // Return the current/latest server information
+  ServerInfo getInfo();
+
 }

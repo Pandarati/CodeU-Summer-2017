@@ -236,8 +236,7 @@ public final class Chat {
           System.out.println("The server did not send a valid info object.");
         }
         else{
-          //THIS NEEDS TO BE UPDATED
-          System.out.println("RUNNNING INFO");
+          System.out.println("Server Information: \nversion: "+ info.getVersion() + "\nstart time: " + info.startTime);
         }
       }
     });

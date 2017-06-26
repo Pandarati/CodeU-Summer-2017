@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import java.io.IOException;
+
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -36,9 +38,18 @@ public final class View implements BasicView, SinglesView {
   private final static Logger.Log LOG = Logger.newLog(View.class);
 
   private final Model model;
+  private static ServerInfo info;
 
   public View(Model model) {
     this.model = model;
+    try
+    {
+      info = new ServerInfo();
+    }
+    catch (IOException ex)
+    {
+      System.out.println("ERROR: Failed to create ServerInfo, " + ex.getMessage());
+    }
   }
 
 
@@ -60,6 +71,11 @@ public final class View implements BasicView, SinglesView {
   @Override
   public Collection<Message> getMessages(Collection<Uuid> ids) {
     return intersect(model.messageById(), ids);
+  }
+
+  @Override
+  public ServerInfo getInfo(){
+    return info;
   }
 
   @Override
