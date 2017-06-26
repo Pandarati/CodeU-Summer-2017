@@ -314,8 +314,12 @@ public final class Chat {
         System.out.println("  Interest Commands: ");
         System.out.println("    userI-add <name>");
         System.out.println("      Add a new interest in a given user and follow their activity.");
+        System.out.println("    userI-remove <name>");
+        System.out.println("      Remove a user interest to stop following his or her activity.");
         System.out.println("    convI-add <title>");
         System.out.println("      Add a new interest in a given conversation title and follow its activity.");
+        System.out.println("    convI-remove <name>");
+        System.out.println("      Remove a conversation interest to stop following its activity");
         System.out.println("    status-update");
         System.out.println("      Get a status update on a user and their activity.");
         System.out.println(" ");
