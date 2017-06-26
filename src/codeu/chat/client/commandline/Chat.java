@@ -69,6 +69,14 @@ public final class Chat {
     final List<String> args = new ArrayList<String>();
     final Tokenizer tokenizer = new Tokenizer(line);
 
+    //Handles if the user types in a blank command
+    if(line.equals("")){
+      System.out.println("");
+      System.out.println("Stuck? Try typing \"help\"");
+      System.out.println("");
+      return true;
+    }
+
     try {
       for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
         args.add(token);
