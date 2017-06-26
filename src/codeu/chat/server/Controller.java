@@ -19,13 +19,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import codeu.chat.client.commandline.Chat;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.ConversationInterest;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
@@ -46,6 +49,7 @@ public final class Controller implements RawController, BasicController {
   //File Info for writing to Log
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
+
 
   ArrayList<String> storedLogCommands = new ArrayList<String>();
 
@@ -107,6 +111,7 @@ public final class Controller implements RawController, BasicController {
       message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
       model.add(message);
       LOG.info("Message added: %s", message.id);
+
 
       updateConversationInterests(conversation);
       updateUserInterests(author, conversation);
