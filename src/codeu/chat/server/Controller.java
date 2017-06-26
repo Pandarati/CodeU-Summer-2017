@@ -324,8 +324,8 @@ public final class Controller implements RawController, BasicController {
    *
    */
   public void start(){
-    //Refreshes 1 minute with a 1 second delay
-    myTimer.scheduleAtFixedRate(task, 1000, 60000);
+    //Refreshes 10 seconds with a 1 second delay
+    myTimer.scheduleAtFixedRate(task, 1000, 10000);
 
   }
 
