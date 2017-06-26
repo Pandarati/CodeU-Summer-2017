@@ -14,6 +14,9 @@
 
 package codeu.chat.client.commandline;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.List;
@@ -35,6 +38,8 @@ import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
+import codeu.chat.util.LogLoader;
+import codeu.chat.util.LogReader;
 import codeu.chat.util.Time;
 import codeu.chat.util.Tokenizer;
 import codeu.chat.util.Uuid;
@@ -54,9 +59,39 @@ public final class Chat {
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
-  public Chat(Context context) {
+  //Log Files Info
+  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
+  public PrintWriter outputStream;
+  LogReader logReader;
+
+  //Store the lines of Log
+  ArrayList<String> fileLines;
+
+  public Chat(Context context) throws IOException{
+
+    //Reads in the Log and stores the lines in an ArrayList
+    logReader = new LogReader();
+    fileLines = logReader.readFile();
+
+    //HOT FIX FOR SUBMISSION: SHOULD BE FIXED IN THE FUTURE
+    //Loads in the fileLines from the Log
+    for(int i = 0; i < fileLines.size(); i++){
+      LogLoader logLoader = new LogLoader(fileLines.get(i));
+
+      //Load in User to InterestMap
+      if (logLoader.findCommmand().equals("U")) {
+        String[] userInfo = logLoader.loadUser();
+
+        Uuid userID = Uuid.parse(userInfo[0]);
+        interestMap.put(userID, new HashSet<Interest>());
+
+      }
+    }
+
+
     this.panels.push(createRootPanel(context));
   }
+
 
   // HANDLE COMMAND
   //
