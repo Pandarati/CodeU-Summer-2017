@@ -22,6 +22,8 @@ import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
+import codeu.chat.common.ConversationInterest;
 import codeu.chat.util.Uuid;
 
 import java.io.IOException;
@@ -90,5 +92,53 @@ public final class BasicControllerTest {
     assertFalse(
         "Check that the message has a valid reference",
         message == null);
+  }
+
+  @Test
+  public void testAddUserInterest() {
+    final User ownerUser = controller.newUser("owner-user");
+
+    assertFalse(
+        "Check that user has a valid reference",
+        ownerUser == null);
+
+    final User interestUser = controller.newUser("interest-user");
+
+    assertFalse(
+        "Check that user has a valid reference",
+        interestUser == null);
+
+    final UserInterest interest = controller.newUserInterest(
+      ownerUser.id, interestUser.id);
+
+    assertFalse(
+        "Check that the interest has a valid reference",
+        interest == null);
+
+  }
+
+  @Test
+  public void testAddConversationInterest() {
+    final User user = controller.newUser("user");
+
+    assertFalse(
+        "Check that user has a valid reference",
+        user == null);
+
+    final ConversationHeader conversation = controller.newConversation(
+        "conversation",
+        user.id);
+
+    assertFalse(
+        "Check that conversation has a valid reference",
+        conversation == null);
+
+    final ConversationInterest interest = controller.newConversationInterest(
+      user.id, conversation.id);
+
+    assertFalse(
+        "Check that the interest has a valid reference",
+        interest == null);
+
   }
 }
