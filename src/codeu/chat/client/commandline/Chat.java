@@ -415,8 +415,7 @@ public final class Chat {
           // Find the first user by entered name
           if (userInterest == null) {
             System.out.println("ERROR: Failed to create new user interest");
-          }
-          else {
+          } else {
             // create a user interest and add it to the current user's interests
             UserInterest interest = new UserInterest(user.user.id, userInterest.user.id, Time.now());
             interestMap.get(user.user.id).add(interest);
@@ -449,15 +448,14 @@ public final class Chat {
         // also needs to check that interest is not already added
         final String title = args.size() > 0 ? args.get(0) : "";
         if (title.length() > 0 ) {
-          final ConversationContext conversationInterest = findConversation(title);
+          final ConversationContext conversationContext = findConversation(title);
 
-          if (conversationInterest == null) {
+          if (conversationContext == null) {
             System.out.println("ERROR: Failed to create new conversation interest");
-          }
-          else {
+          } else {
             // create a conversation interest and add it to the current user's interests
             ConversationInterest interest =
-                    new ConversationInterest(user.user.id, conversationInterest.conversation.id, Time.now());
+                    new ConversationInterest(user.user.id, conversationContext.conversation.id, Time.now());
             interestMap.get(user.user.id).add(interest);
           }
         } else {
@@ -475,7 +473,111 @@ public final class Chat {
       }
     });
 
-    // status-update (status update for a user's interests)
+    // CONVI-REMOVE (remove conversation interest)
+    //
+    // Add a command to remove an existing convresation interest when the user
+    // enters convI-remove while on the interest panel.
+    //
+    // Serena's front end code
+    panel.register("convI-remove", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String title = args.size() > 0 ? args.get(0) : "";
+        if (title.length() > 0) {
+          final ConversationContext conversationContext = findConversation(title);
+
+          if (conversationContext == null) {
+            System.out.println("ERROR: No conversation found");
+          } else {
+            if (!removeConversationInterest(conversationContext))
+              System.out.println("ERROR: Interest failed to be removed");
+          }
+        } else {
+          System.out.println("ERROR: Enter valid conversation title");
+        }
+      }
+
+      private boolean removeConversationInterest(ConversationContext conversation) {
+        // fetch the current user's interests
+        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
+        while(iterator.hasNext()){
+          Interest current = iterator.next();
+
+            // check if the interest is a ConversationInterest
+            if (current.getClass() == ConversationInterest.class) {
+              // check if the interest is in the desired conversation
+              if (Uuid.equals(current.interest, conversation.conversation.id))
+                // if so we remove that conversation interest
+                return interestMap.get(user.user.id).remove(current);
+            }
+          }
+          return false;
+        }
+
+      // find the ConversationContext for the desired conversation
+      private ConversationContext findConversation(String title) {
+        for (final ConversationContext other : user.conversations()) {
+          if (title.equals(other.conversation.title)) {
+            return other;
+          }
+        }
+        return null;
+      }
+    });
+
+    // USERI-REMOVE (remove user interest)
+    //
+    // Add a command to remove an existing user interest when the user enters
+    // userI-remove while on the interest panel.
+    //
+    // Serena's front end code
+    panel.register("userI-remove", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String name = args.size() > 0 ? args.get(0) : "";
+        if (name.length() > 0 ) {
+          final UserContext userContext = findUser(name);
+
+          if (userContext == null) {
+            System.out.println("ERROR: No user found");
+          } else {
+            if (!removeUserInterest(userContext))
+              System.out.println("ERROR: Interest failed to be removed");
+          }
+        } else {
+          System.out.println("ERROR: Enter valid user name");
+        }
+      }
+
+      private boolean removeUserInterest(UserContext other) {
+        // fetch the current user's interests
+        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
+        while(iterator.hasNext()){
+          Interest current = iterator.next();
+
+          // check if the interest is a UserInterest
+          if (current.getClass() == UserInterest.class) {
+            // check if the interest is in the desired user
+            if (Uuid.equals(current.interest, other.user.id))
+              // if so we remove that user interest
+              return interestMap.get(user.user.id).remove(current);
+          }
+        }
+        return false;
+      }
+
+      private UserContext findUser(String name) {
+        for (final UserContext other : user.users()) {
+          User otherUser = other.user;
+          if (name.equals(otherUser.name)) {
+            return other;
+          }
+        }
+        return null;
+      }
+    });
+
+    // STATUS-UPDATE (status update for a user's interests)
     //
     // Add a command that lets the user view the update status on their
     // interests when the use types status-update while on the interest panel.
