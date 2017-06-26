@@ -42,7 +42,6 @@ public final class UserInterest extends Interest{
 
     public Set<ConversationHeader> conversations;
 
-    // constructor for a User interest
     public UserInterest(Uuid id, Uuid owner, Uuid userId, Time creation) {
         super(id, owner, userId, creation);
         conversations = new HashSet<ConversationHeader>();
