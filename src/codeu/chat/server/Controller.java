@@ -34,9 +34,7 @@ import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
-import codeu.chat.util.Logger;
-import codeu.chat.util.Time;
-import codeu.chat.util.Uuid;
+import codeu.chat.util.*;
 
 public final class Controller implements RawController, BasicController {
 
@@ -50,9 +48,12 @@ public final class Controller implements RawController, BasicController {
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
 
+  LogReader logReader;
+  ArrayList<String> fileLines;
+
+
 
   ArrayList<String> storedLogCommands = new ArrayList<String>();
-
 
   public Controller(Uuid serverId, Model model) throws IOException{
     this.model = model;
@@ -68,6 +69,10 @@ public final class Controller implements RawController, BasicController {
     //Appends to Log instead of overwriting it
     outputStream.append("");
     outputStream.flush();
+
+
+      //We finished Loading the Log(This is so we don't rewrite to the log stuff that's already in it)
+      this.finishedLoadingLog = this.loadLog();
 
     //Start timer
     start();
@@ -292,6 +297,43 @@ public final class Controller implements RawController, BasicController {
   }
 
   private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
+
+  /** Discerns the logic for code values that load in the Log
+   *
+   * @return boolean
+   * @throws IOException
+   */
+  private boolean loadLog() throws IOException{
+
+    //Reads in the Log and stores the lines in an ArrayList
+    logReader = new LogReader();
+    fileLines = logReader.readFile();
+
+    //Loads in the fileLines from the Log
+    for(int i = 0; i < fileLines.size(); i++){
+      LogLoader logLoader = new LogLoader(fileLines.get(i));
+
+      //Load in User
+      if(logLoader.findCommmand().equals("U")){
+        String[] userInfo = logLoader.loadUser();
+        this.newUser(Uuid.parse(userInfo[0]), userInfo[1], Time.now());
+      }
+      //Load in Conversation
+      else if(logLoader.findCommmand().equals("C")){
+        String[] userInfo = logLoader.loadConversation();
+        this.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.fromMs(Long.parseLong(userInfo[3])));
+      }
+      //Load in Message
+      else if(logLoader.findCommmand().equals("M")){
+        String[] userInfo = logLoader.loadMessage();
+        this.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.fromMs(Long.parseLong(userInfo[2])));
+      }
+
+    }
+
+    return true;
+  }
+
 
   Timer myTimer = new Timer();
 
