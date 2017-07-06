@@ -25,7 +25,7 @@ import codeu.chat.common.ServerInfo;
 
 public final class Context {
 
-  private final BasicView view;
+  private final View view;
   private final Controller controller;
 
   public Context(ConnectionSource source) {
@@ -50,6 +50,6 @@ public final class Context {
 
   //Creating a basic context with no information: users, conversations or messages
   public ServerInfo getInfo(){
-      return((View)view).getInfo();
+      return view.getInfo();
   }
 }

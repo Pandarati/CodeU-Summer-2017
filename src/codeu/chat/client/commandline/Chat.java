@@ -59,7 +59,7 @@ public final class Chat {
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
-  
+
   public Chat(Context context) throws IOException{
     this.panels.push(createRootPanel(context));
   }
@@ -249,7 +249,7 @@ public final class Chat {
           System.out.println("The server did not send a valid info object.");
         }
         else{
-          System.out.println("Server Information: \nversion: "+ info.getVersion() + "\nstart time: " + info.startTime);
+          System.out.println("Server Information: \n Version: "+ info.getVersion() + "\n Start Time: " + info.getStartTime());
         }
       }
     });

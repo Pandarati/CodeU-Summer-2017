@@ -229,16 +229,16 @@ public final class Server {
         public void onMessage(InputStream in, OutputStream out) throws IOException{
             Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
 
-
             try{
               serverInfo = new ServerInfo();
             }catch (IOException ex){
               LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
-            // Writes out the ServerInfo Version and StartTime to the user!
-            Uuid.SERIALIZER.write(out, serverInfo.version);
-            Time.SERIALIZER.write(out, serverInfo.startTime);
+            // Writes out the ServerInfo Version and StartTime to the user
+            //Serializer OUT must be in the same order as Serializer IN
+            Uuid.SERIALIZER.write(out, serverInfo.getVersion());
+            Time.SERIALIZER.write(out, serverInfo.getStartTime());
         }
     });
 

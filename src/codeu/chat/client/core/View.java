@@ -32,11 +32,11 @@ import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
-// VIEW
-//
-// This is the view component of the Model-View-Controller pattern used by the
-// the client to reterive readonly data from the server. All methods are blocking
-// calls.
+/** VIEW
+ *  This is the view component of the Model-View-Controller pattern used by the
+ *  the client to reterive readonly data from the server. All methods are blocking calls.
+ *
+ */
 final class View implements BasicView {
 
   private final static Logger.Log LOG = Logger.newLog(View.class);
@@ -161,7 +161,6 @@ final class View implements BasicView {
     }
 
     return interests;
-
   }
 
   // not by Id, so maybe think about whether we need it to be by Id or not
@@ -200,24 +199,24 @@ final class View implements BasicView {
     try(final Connection connection = source.connect()){
         Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
         if(Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
-          final Time startTime = Time.SERIALIZER.read(connection.in());
-          final Uuid version = Uuid.SERIALIZER.read(connection.in());
 
+        //Why do we need this?????
+        final Uuid version = Uuid.SERIALIZER.read(connection.in());
+        final Time startTime = Time.SERIALIZER.read(connection.in());
 
-          //Creates a new ServerInfo object with the latest info: startTime and version
-          return new ServerInfo(startTime, version);
+        //Creates a new ServerInfo object with the latest info: startTime and version
+        return new ServerInfo(startTime, version);
         }
         else {
-            //There was a problem with forming the connection
-            // Communicate this error - The server didn't respond with the connection we wanted.
-            System.out.println("The connections don't match!");
+          //There was a problem with forming the connection
+          // Communicate this error - The server didn't respond with the connection we wanted.
+          System.out.println("The connections don't match!");
         }
     }
     catch (Exception exception){
-        // Communicate this error - There was a problem with forming the connection!
-        System.out.println("There was a problem with forming the connection!");
+      // Communicate this error - There was a problem with forming the connection!
+      System.out.println("There was a problem with forming the connection!");
     }
-
 
     //Communicate this error - Something went wrong, and this shouldn't be returning!
     return null;
