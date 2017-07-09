@@ -189,11 +189,11 @@ final class View implements BasicView {
   }
 
   /** Gets the Server Information
-     *
-     *  Based on request and response time.
-     *
-     *  @return ServerInfo(startTime, version)
-     */
+  *
+  *  Based on request and response time.
+  *
+  *  @return ServerInfo(startTime, version)
+  */
   @Override
   public ServerInfo getInfo(){
     try(final Connection connection = source.connect()){
@@ -221,5 +221,4 @@ final class View implements BasicView {
     //Communicate this error - Something went wrong, and this shouldn't be returning!
     return null;
   }
-
 }

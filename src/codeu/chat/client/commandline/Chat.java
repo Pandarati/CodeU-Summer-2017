@@ -59,6 +59,8 @@ public final class Chat {
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
+  private int counter = 0;
+  ServerInfo info = null;
 
   public Chat(Context context) throws IOException{
     this.panels.push(createRootPanel(context));
@@ -243,13 +245,21 @@ public final class Chat {
     panel.register("info", new Panel.Command(){
       @Override
       public void invoke(List<String> args){
-        final ServerInfo info = context.getInfo();
+        counter++;
+
+        //We should only create one info object
+        //This stops duplicates from creating new ServerInfo Objects
+        if(counter == 1) {
+          info = context.getInfo();
+        }
+
         if(info == null){
           // Communicate error to user - the server did not send a valid info object.
           System.out.println("The server did not send a valid info object.");
         }
         else{
-          System.out.println("Server Information: \n Version: "+ info.getVersion() + "\n Start Time: " + info.getStartTime());
+          System.out.println("Server Information: \n Version: "+ info.getVersion() + "\n Start Time: " + info.getStartTime() +
+                  "\n Up Time: " + info.calcUpTime());
         }
       }
     });

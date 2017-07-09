@@ -36,8 +36,8 @@ public final class Context {
   public UserContext create(String name) {
     final User user = controller.newUser(name);
     return user == null ?
-        null :
-        new UserContext(user, view, controller);
+      null :
+      new UserContext(user, view, controller);
   }
 
   public Iterable<UserContext> allUsers() {
@@ -50,6 +50,6 @@ public final class Context {
 
   //Creating a basic context with no information: users, conversations or messages
   public ServerInfo getInfo(){
-      return view.getInfo();
+    return view.getInfo();
   }
 }
