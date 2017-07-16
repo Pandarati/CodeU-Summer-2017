@@ -76,10 +76,6 @@ public final class Server {
   //Log Files Info
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
-  LogReader logReader;
-
-  //Store the lines of Log
-  ArrayList<String> fileLines;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException{
 
@@ -100,35 +96,6 @@ public final class Server {
     outputStream.append("");
     outputStream.flush();
 
-    //Reads in the Log and stores the lines in an ArrayList
-    logReader = new LogReader();
-    fileLines = logReader.readFile();
-
-    //Loads in the fileLines from the Log
-    for(int i = 0; i < fileLines.size(); i++){
-      LogLoader logLoader = new LogLoader(fileLines.get(i));
-
-      //Load in User
-      if(logLoader.findCommmand().equals("U")){
-        String[] userInfo = logLoader.loadUser();
-        this.controller.newUser(Uuid.parse(userInfo[0]), userInfo[1], Time.now());
-      }
-      //Load in Conversation
-      else if(logLoader.findCommmand().equals("C")){
-        String[] userInfo = logLoader.loadConversation();
-        this.controller.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.fromMs(Long.parseLong(userInfo[3])));
-      }
-      //Load in Message
-      else if(logLoader.findCommmand().equals("M")){
-        String[] userInfo = logLoader.loadMessage();
-        this.controller.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.fromMs(Long.parseLong(userInfo[2])));
-      }
-
-    }
-
-    //We finished Loading the Log(This is so we don't rewrite to the log stuff that's already in it)
-    controller.finishedLoadingLog = true;
-
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -148,8 +115,6 @@ public final class Server {
             author,
             conversation,
             message.id));
-
-
       }
     });
 
@@ -264,16 +229,16 @@ public final class Server {
         public void onMessage(InputStream in, OutputStream out) throws IOException{
             Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
 
-
             try{
               serverInfo = new ServerInfo();
             }catch (IOException ex){
               LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
-            // Writes out the ServerInfo Version and StartTime to the user!
-            Uuid.SERIALIZER.write(out, serverInfo.version);
-            Time.SERIALIZER.write(out, serverInfo.startTime);
+            // Writes out the ServerInfo Version and StartTime to the user
+            //Serializer OUT must be in the same order as Serializer IN
+            Uuid.SERIALIZER.write(out, serverInfo.getVersion());
+            Time.SERIALIZER.write(out, serverInfo.getStartTime());
         }
     });
 

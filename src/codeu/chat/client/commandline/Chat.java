@@ -59,36 +59,10 @@ public final class Chat {
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
-  //Log Files Info
-  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
-  public PrintWriter outputStream;
-  LogReader logReader;
-
-  //Store the lines of Log
-  ArrayList<String> fileLines;
+  private int counter = 0;
+  ServerInfo info = null;
 
   public Chat(Context context) throws IOException{
-
-    //Reads in the Log and stores the lines in an ArrayList
-    logReader = new LogReader();
-    fileLines = logReader.readFile();
-
-    //HOT FIX FOR SUBMISSION: SHOULD BE FIXED IN THE FUTURE
-    //Loads in the fileLines from the Log
-    for(int i = 0; i < fileLines.size(); i++){
-      LogLoader logLoader = new LogLoader(fileLines.get(i));
-
-      //Load in User to InterestMap
-      if (logLoader.findCommmand().equals("U")) {
-        String[] userInfo = logLoader.loadUser();
-
-        Uuid userID = Uuid.parse(userInfo[0]);
-        interestMap.put(userID, new HashSet<Interest>());
-
-      }
-    }
-
-
     this.panels.push(createRootPanel(context));
   }
 
@@ -271,13 +245,21 @@ public final class Chat {
     panel.register("info", new Panel.Command(){
       @Override
       public void invoke(List<String> args){
-        final ServerInfo info = context.getInfo();
+        counter++;
+
+        //We should only create one info object
+        //This stops duplicates from creating new ServerInfo Objects
+        if(counter == 1) {
+          info = context.getInfo();
+        }
+
         if(info == null){
           // Communicate error to user - the server did not send a valid info object.
           System.out.println("The server did not send a valid info object.");
         }
         else{
-          System.out.println("Server Information: \nversion: "+ info.getVersion() + "\nstart time: " + info.startTime);
+          System.out.println("Server Information: \n Version: "+ info.getVersion() + "\n Start Time: " + info.getStartTime() +
+                  "\n Up Time: " + info.calcUpTime());
         }
       }
     });

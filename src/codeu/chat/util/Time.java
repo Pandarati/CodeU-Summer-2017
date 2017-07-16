@@ -26,16 +26,12 @@ public final class Time implements Comparable<Time> {
 
     @Override
     public void write(OutputStream out, Time value) throws IOException {
-
       Serializers.LONG.write(out, value.inMs());
-
     }
 
     @Override
     public Time read(InputStream in) throws IOException {
-
       return Time.fromMs(Serializers.LONG.read(in));
-
     }
   };
 
@@ -65,5 +61,4 @@ public final class Time implements Comparable<Time> {
   public static Time fromMs(long ms) { return new Time(ms); }
 
   public static Time now() { return Time.fromMs(System.currentTimeMillis()); }
-
 }
