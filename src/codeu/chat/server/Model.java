@@ -19,6 +19,7 @@ import java.util.Comparator;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.ConversationInterest;
+import codeu.chat.common.Interest;
 import codeu.chat.common.LinearUuidGenerator;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
@@ -76,6 +77,9 @@ public final class Model {
   private final Store<Uuid, ConversationInterest> conversationInterestById = new Store<>(UUID_COMPARE);
   private final Store<Uuid, ConversationInterest> conversationInterestByOwnerId = new Store<>(UUID_COMPARE);
   private final Store<Uuid, ConversationInterest> conversationInterestByConversationId = new Store<>(UUID_COMPARE);
+
+  private final Store<Uuid, Interest> interestById = new Store<>(UUID_COMPARE);
+  private final Store<Uuid, Interest> interestByOwnerId = new Store<>(UUID_COMPARE);
 
   public void add(User user) {
     userById.insert(user.id, user);
@@ -140,6 +144,9 @@ public final class Model {
     userInterestById.insert(interest.id, interest);
     userInterestByOwnerId.insert(interest.owner, interest);
     userInterestByUserId.insert(interest.interest, interest);
+
+    interestById.insert(interest.id, interest);
+    interestByOwnerId.insert(interest.owner, interest);
   }
 
   public StoreAccessor<Uuid, UserInterest> userInterestById() { return userInterestById; }
@@ -150,6 +157,9 @@ public final class Model {
       conversationInterestById.insert(interest.id, interest);
       conversationInterestByOwnerId.insert(interest.owner, interest);
       conversationInterestByConversationId.insert(interest.interest, interest);
+
+    interestById.insert(interest.id, interest);
+    interestByOwnerId.insert(interest.owner, interest);
   }
 
   public StoreAccessor<Uuid, ConversationInterest> conversationInterestById() { return conversationInterestById; }
@@ -157,5 +167,9 @@ public final class Model {
   public StoreAccessor<Uuid, ConversationInterest> conversationInterestByConversationId() {
       return conversationInterestByConversationId;
   }
+
+  public StoreAccessor<Uuid, Interest> interestById() { return interestById; }
+
+  public StoreAccessor<Uuid, Interest> interestByOwnerId() { return interestByOwnerId; }
 
 }

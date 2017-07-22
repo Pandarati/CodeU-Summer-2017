@@ -27,10 +27,8 @@ import java.io.IOException;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
-import codeu.chat.client.core.ConversationInterestContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
-import codeu.chat.client.core.UserInterestContext;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationInterest;
 import codeu.chat.common.Interest;
@@ -416,8 +414,7 @@ public final class Chat {
             System.out.println("ERROR: Failed to create new user interest");
           } else {
             // create a user interest and add it to the current user's interests
-            UserInterest interest = new UserInterest(user.user.id, userInterest.user.id, Time.now());
-            interestMap.get(user.user.id).add(interest);
+            UserInterest interest = user.addUserInterest(name);
           }
         } else {
           System.out.println("ERROR: Enter valid user name");
@@ -453,9 +450,7 @@ public final class Chat {
             System.out.println("ERROR: Failed to create new conversation interest");
           } else {
             // create a conversation interest and add it to the current user's interests
-            ConversationInterest interest =
-                    new ConversationInterest(user.user.id, conversationContext.conversation.id, Time.now());
-            interestMap.get(user.user.id).add(interest);
+            ConversationInterest interest = user.addConversationInterest(title);
           }
         } else {
           System.out.println("ERROR: Enter valid conversation title");
@@ -585,30 +580,7 @@ public final class Chat {
     panel.register("status-update", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-
-        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
-        String userInterests = "";
-        String conversationInterests = "";
-        while(iterator.hasNext()){
-          Interest current = iterator.next();
-
-          if (current.getClass() == ConversationInterest.class) {
-            conversationInterests = conversationInterests + current.toString() + "\n";
-            // reset the information
-            current.reset();
-          }
-
-          if (current.getClass() == UserInterest.class) {
-            userInterests = userInterests + current.toString() + "\n";
-            // reset the information
-            current.reset();
-          }
-        }
-
-        System.out.println("--- update: user interests ---");
-        System.out.println(userInterests);
-        System.out.println("--- update: conversation interests ---");
-        System.out.println(conversationInterests);
+        System.out.println(user.statusUpdate());
       }
 
     });

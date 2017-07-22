@@ -24,6 +24,7 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.ConversationInterest;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.SinglesView;
 import codeu.chat.common.User;
@@ -100,6 +101,9 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public ConversationInterest findConversationInterest(Uuid id) { return model.conversationInterestById().first(id); }
+
+  //@Override
+  public Collection<Interest> getInterests() { return all(model.interestByOwnerId()); }
 
   private static <S,T> Collection<T> all(StoreAccessor<S,T> store) {
 

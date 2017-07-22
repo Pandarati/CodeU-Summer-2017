@@ -67,4 +67,11 @@ public interface BasicController {
   //  representing the full state of the interest on the server.
   ConversationInterest newConversationInterest(Uuid owner, Uuid conversation);
 
+  // STATUS UPDATE
+  //
+  // A status update must reset all interest activity, specifically the
+  // the set of conversations for the user interest, and the missed messages
+  // for the conversation interest.
+  String statusUpdate(Uuid user);
+
 }

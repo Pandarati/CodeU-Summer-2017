@@ -145,6 +145,19 @@ public final class Server {
         }
     });
 
+    // Status Update - A client wants a status update on their interests from the back end
+    this.commands.put(NetworkCode.STATUS_UPDATE_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final String update = controller.statusUpdate(user);
+
+        Serializers.INTEGER.write(out, NetworkCode.STATUS_UPDATE_RESPONSE);
+        Serializers.nullable(Serializers.STRING).write(out, update);
+      }
+    });
+
     // Get Users - A client wants to get all the users from the back end.
     this.commands.put(NetworkCode.GET_USERS_REQUEST, new Command() {
       @Override

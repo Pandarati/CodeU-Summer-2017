@@ -23,6 +23,7 @@ public final class UserInterest extends Interest{
             Uuid.SERIALIZER.write(out, value.id);
             Uuid.SERIALIZER.write(out, value.owner);
             Uuid.SERIALIZER.write(out, value.interest);
+          //  Serializers.collection.write(out, value.conversations);
             Time.SERIALIZER.write(out, value.creation);
 
         }
@@ -34,6 +35,7 @@ public final class UserInterest extends Interest{
                     Uuid.SERIALIZER.read(in),
                     Uuid.SERIALIZER.read(in),
                     Uuid.SERIALIZER.read(in),
+                //    Serializers.collection(Serializer <HashSet>).read(in),
                     Time.SERIALIZER.read(in)
             );
 
@@ -47,11 +49,16 @@ public final class UserInterest extends Interest{
         conversations = new HashSet<ConversationHeader>();
     }
 
+    public UserInterest(Uuid id, Uuid owner, Uuid userId, HashSet<ConversationHeader> conversations, Time creation) {
+        super(id, owner, userId, creation);
+        this.conversations = conversations;
+    }
+/*
     public UserInterest(Uuid owner, Uuid userId, Time creation) {
         super(owner, userId, creation);
         conversations = new HashSet<ConversationHeader>();
     }
-
+*/
     public String toString() {
         String convos = "";
         Iterator<ConversationHeader> iterator = conversations.iterator();
