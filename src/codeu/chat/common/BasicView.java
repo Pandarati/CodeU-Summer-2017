@@ -51,17 +51,12 @@ public interface BasicView {
   // GET USER INTERESTS
   //
   //  Return all user interests whose id is found in the given collection.
-  Collection<UserInterest> getUserInterests();
+ // Collection<UserInterest> getUserInterests();
 
   // GET CONVERSATION INTERESTS
   //
   //  Return all conversation interests whose id is found in the given collection.
-  Collection<ConversationInterest> getConversationInterests();
-
-  // GET INTERESTS
-  //
-  // Return all interests who belong to the user id found in the given collection.
- // Collection<Interest> getInterests();
+  //Collection<ConversationInterest> getConversationInterests();
 
   // GET INFO
   //

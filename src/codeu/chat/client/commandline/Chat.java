@@ -478,6 +478,9 @@ public final class Chat {
       public void invoke(List<String> args) {
         final String title = args.size() > 0 ? args.get(0) : "";
         if (title.length() > 0) {
+          if (!user.removeConversationInterest(title))
+            System.out.println("ERROR: Interest failed to be removed");
+          /*
           final ConversationContext conversationContext = findConversation(title);
 
           if (conversationContext == null) {
@@ -486,9 +489,11 @@ public final class Chat {
             if (!removeConversationInterest(conversationContext))
               System.out.println("ERROR: Interest failed to be removed");
           }
+        } */
         } else {
           System.out.println("ERROR: Enter valid conversation title");
         }
+
       }
 
       private boolean removeConversationInterest(ConversationContext conversation) {
@@ -530,6 +535,9 @@ public final class Chat {
       public void invoke(List<String> args) {
         final String name = args.size() > 0 ? args.get(0) : "";
         if (name.length() > 0 ) {
+          if (!user.removeUserInterest(name))
+            System.out.println("ERROR: Interest failed to be removed");
+          /*
           final UserContext userContext = findUser(name);
 
           if (userContext == null) {
@@ -537,7 +545,7 @@ public final class Chat {
           } else {
             if (!removeUserInterest(userContext))
               System.out.println("ERROR: Interest failed to be removed");
-          }
+          } */
         } else {
           System.out.println("ERROR: Enter valid user name");
         }

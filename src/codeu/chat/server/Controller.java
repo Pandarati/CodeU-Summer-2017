@@ -207,40 +207,60 @@ public final class Controller implements RawController, BasicController {
         return interest;
     }
 
-   // @Override
+    @Override
     public boolean removeUserInterest (Uuid owner, Uuid interest){
 
         final User foundUser = model.userById().first(owner);
         final User interestUser = model.userById().first(interest);
 
-        boolean removed = false;
-
         if(foundUser != null && interestUser != null) {
-            removed = interestMap.get(owner).remove(interest);
-            if(removed)
-                LOG.info("User Interest removed");
-        } else
-            LOG.info("User Interest failed to be removed");
+            // fetch the current user's interests
+            Iterator<Interest> iterator = interestMap.get(owner).iterator();
+            while (iterator.hasNext()) {
+                Interest current = iterator.next();
 
-        return removed;
+                // check if the interest is a UserInterest
+                if (current.getClass() == UserInterest.class) {
+                    // check if the interest is in the desired user
+                    if (Uuid.equals(current.interest, interest)) {
+                        // if so we remove that user interest
+                        LOG.info("User Interest removed");
+                        return interestMap.get(owner).remove(current);
+                    }
+                }
+            }
+        }
+        LOG.info("User Interest failed to be removed");
+        return false;
+
+        // removed = interestMap.get(owner).remove(interest);
     }
 
-    //@Override
+    @Override
     public boolean removeConversationInterest(Uuid owner, Uuid conversation){
 
         final User foundUser = model.userById().first(owner);
         final ConversationHeader foundConversation = model.conversationById().first(conversation);
 
-        boolean removed = false;
-
         if(foundUser != null && foundConversation != null) {
-            removed = interestMap.get(owner).remove(conversation);
-            if(removed)
-                LOG.info("Conversation Interest removed");
-        } else
-            LOG.info("Conversation Interest failed to be removed");
+            // fetch the current user's interests
+            Iterator<Interest> iterator = interestMap.get(owner).iterator();
+            while (iterator.hasNext()) {
+                Interest current = iterator.next();
 
-        return removed;
+                // check if the interest is a ConversationInterest
+                if (current.getClass() == ConversationInterest.class) {
+                    // check if the interest is in the desired conversation
+                    if (Uuid.equals(current.interest, conversation))
+                        // if so we remove that conversation interest
+                        LOG.info("Conversation Interest removed");
+                    return interestMap.get(owner).remove(current);
+                }
+            }
+        }
+
+        LOG.info("Conversation Interest failed to be removed");
+        return false;
     }
 
     private void updateUserInterests(Uuid author, ConversationHeader conversation){
@@ -261,7 +281,6 @@ public final class Controller implements RawController, BasicController {
                 }
             }
         }
-
     }
 
     private void updateConversationInterests(Uuid conversation){
@@ -282,7 +301,6 @@ public final class Controller implements RawController, BasicController {
                 }
             }
         }
-
     }
 
     @Override
@@ -306,13 +324,12 @@ public final class Controller implements RawController, BasicController {
                 // reset the information
                  current.reset();
             }
-
         }
 
         LOG.info("Status Update completed");
 
         return "Status Update: \n\n--- update: user interests ---\n" + userInterests
-                + "\n\n--- update: conversation interests ---\n" + conversationInterests ;
+                + "\n--- update: conversation interests ---\n" + conversationInterests ;
     }
 
   private Uuid createId() {

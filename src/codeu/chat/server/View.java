@@ -79,13 +79,13 @@ public final class View implements BasicView, SinglesView {
     return info;
   }
 
-  @Override
-  public Collection<UserInterest> getUserInterests() { return  all(model.userInterestById()); }
+  //@Override
+  //public Collection<UserInterest> getUserInterests() { return  all(model.userInterestById()); }
 
-  @Override
-  public Collection<ConversationInterest> getConversationInterests() {
-    return all(model.conversationInterestById());
-  }
+  //@Override
+  //public Collection<ConversationInterest> getConversationInterests() {
+  //  return all(model.conversationInterestById());
+ // }
 
   @Override
   public User findUser(Uuid id) { return model.userById().first(id); }
@@ -101,9 +101,6 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public ConversationInterest findConversationInterest(Uuid id) { return model.conversationInterestById().first(id); }
-
-  //@Override
-  public Collection<Interest> getInterests() { return all(model.interestByOwnerId()); }
 
   private static <S,T> Collection<T> all(StoreAccessor<S,T> store) {
 

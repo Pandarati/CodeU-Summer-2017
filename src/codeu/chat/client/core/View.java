@@ -139,6 +139,7 @@ final class View implements BasicView {
     return messages;
   }
 
+  /*
   // not by Id, so maybe think about whether we need it or not
   @Override
   public Collection<UserInterest> getUserInterests() {
@@ -187,7 +188,7 @@ final class View implements BasicView {
 
     return interests;
 
-  }
+  }*/
 
   /** Gets the Server Information
      *

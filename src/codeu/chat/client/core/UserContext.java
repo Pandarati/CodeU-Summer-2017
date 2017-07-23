@@ -72,8 +72,26 @@ public final class UserContext {
     }
   }
 
+  public boolean removeUserInterest(String name) {
+    User other = findUser(name);
+    if (other == null)
+      return false;
+    else {
+      return controller.removeUserInterest(user.id, other.id);
+    }
+  }
+
+  public boolean removeConversationInterest(String title) {
+    ConversationHeader conversation = findConversation(title);
+    if (conversation == null)
+      return false;
+    else {
+      return controller.removeConversationInterest(user.id, conversation.id);
+    }
+  }
+
   // Find the first user by entered name
-  public User findUser(String name) {
+  private User findUser(String name) {
     for (final User other : view.getUsers()) {
       String otherName = other.name;
       if (name.equals(otherName)) {
@@ -84,7 +102,7 @@ public final class UserContext {
   }
 
   // Find the first conversation entered by title
-  public ConversationHeader findConversation(String title) {
+  private ConversationHeader findConversation(String title) {
     for (final ConversationHeader conversation : view.getConversations()) {
       if (title.equals(conversation.title)) {
         return conversation;
