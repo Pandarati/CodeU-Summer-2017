@@ -14,6 +14,9 @@
 
 package codeu.chat.client.commandline;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.List;
@@ -35,6 +38,8 @@ import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
+import codeu.chat.util.LogLoader;
+import codeu.chat.util.LogReader;
 import codeu.chat.util.Time;
 import codeu.chat.util.Tokenizer;
 import codeu.chat.util.Uuid;
@@ -50,9 +55,17 @@ public final class Chat {
   // panel all it needs to do is pop the top panel.
   private final Stack<Panel> panels = new Stack<>();
 
-  public Chat(Context context) {
+  // Map to store all the Interests in the system, for every User there is a set
+  // of Interests
+  private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
+
+  private int counter = 0;
+  ServerInfo info = null;
+
+  public Chat(Context context) throws IOException{
     this.panels.push(createRootPanel(context));
   }
+
 
   // HANDLE COMMAND
   //
@@ -64,6 +77,14 @@ public final class Chat {
 
     final List<String> args = new ArrayList<String>();
     final Tokenizer tokenizer = new Tokenizer(line);
+
+    //Handles if the user types in a blank command
+    if(line.equals("")){
+      System.out.println("");
+      System.out.println("Stuck? Try typing \"help\"");
+      System.out.println("");
+      return true;
+    }
 
     try {
       for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
@@ -222,13 +243,21 @@ public final class Chat {
     panel.register("info", new Panel.Command(){
       @Override
       public void invoke(List<String> args){
-        final ServerInfo info = context.getInfo();
+        counter++;
+
+        //We should only create one info object
+        //This stops duplicates from creating new ServerInfo Objects
+        if(counter == 1) {
+          info = context.getInfo();
+        }
+
         if(info == null){
           // Communicate error to user - the server did not send a valid info object.
           System.out.println("The server did not send a valid info object.");
         }
         else{
-          System.out.println("Server Information: \nversion: "+ info.getVersion() + "\nstart time: " + info.startTime);
+          System.out.println("Server Information: \n Version: "+ info.getVersion() + "\n Start Time: " + info.getStartTime() +
+                  "\n Up Time: " + info.calcUpTime());
         }
       }
     });
@@ -265,6 +294,8 @@ public final class Chat {
         System.out.println("  Interest Commands: ");
         System.out.println("    userI-add <name>");
         System.out.println("      Add a new interest in a given user and follow their activity.");
+        System.out.println("    userI-remove <name>");
+        System.out.println("      Remove a user interest to stop following his or her activity.");
         System.out.println("    convI-add <title>");
         System.out.println("      Add a new interest in a given conversation title and follow its activity.");
         System.out.println("    userI-remove <name>");

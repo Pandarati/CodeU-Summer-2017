@@ -14,11 +14,21 @@
 
 package codeu.chat.server;
 
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import codeu.chat.client.commandline.Chat;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
@@ -30,9 +40,7 @@ import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
-import codeu.chat.util.Logger;
-import codeu.chat.util.Time;
-import codeu.chat.util.Uuid;
+import codeu.chat.util.*;
 
 public final class Controller implements RawController, BasicController {
 
@@ -44,10 +52,40 @@ public final class Controller implements RawController, BasicController {
 
   private final Model model;
   private final Uuid.Generator uuidGenerator;
+  public boolean finishedLoadingLog = false;
 
-  public Controller(Uuid serverId, Model model) {
+  //File Info for writing to Log
+  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
+  public PrintWriter outputStream;
+
+  LogReader logReader;
+  ArrayList<String> fileLines;
+
+
+
+  ArrayList<String> storedLogCommands = new ArrayList<String>();
+
+  public Controller(Uuid serverId, Model model) throws IOException{
     this.model = model;
     this.uuidGenerator = new RandomUuidGenerator(serverId, System.currentTimeMillis());
+
+    //Server Variables
+    try {
+      outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
+    }catch (FileNotFoundException e){
+      e.printStackTrace();
+    }
+
+    //Appends to Log instead of overwriting it
+    outputStream.append("");
+    outputStream.flush();
+
+
+      //We finished Loading the Log(This is so we don't rewrite to the log stuff that's already in it)
+      this.finishedLoadingLog = this.loadLog();
+
+    //Start timer
+    start();
   }
 
   @Override
@@ -90,6 +128,7 @@ public final class Controller implements RawController, BasicController {
       model.add(message);
       LOG.info("Message added: %s", message.id);
 
+
       updateConversationInterests(conversation);
       updateUserInterests(author, conversationHeader);
 
@@ -117,8 +156,12 @@ public final class Controller implements RawController, BasicController {
           foundConversation.firstMessage;
 
       // Update the conversation to point to the new last message as it has changed.
-
       foundConversation.lastMessage = message.id;
+    }
+
+    //After recreating the state of the server, start storing the newMessage() command calls.
+    if(finishedLoadingLog) {
+      storedLogCommands.add("ADD-MESSAGE " + conversation + " " + id + " " + creationTime.inMs() + " " + author + " \"" + body + "\"");
     }
 
     return message;
@@ -150,6 +193,11 @@ public final class Controller implements RawController, BasicController {
           creationTime);
     }
 
+    //After recreating the state of the server, start storing the newUser() command calls.
+    if(finishedLoadingLog) {
+      storedLogCommands.add("ADD-USER " + user.id + " \"" + name + "\" " + creationTime.inMs());
+    }
+
     return user;
   }
 
@@ -166,6 +214,11 @@ public final class Controller implements RawController, BasicController {
       LOG.info("Conversation added: " + id);
 
       updateUserInterests(owner, conversation);
+    }
+
+    //After recreating the state of the server, start storing the newConversation() command calls.
+    if(finishedLoadingLog) {
+      storedLogCommands.add("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
     }
 
     return conversation;
@@ -356,5 +409,81 @@ public final class Controller implements RawController, BasicController {
   }
 
   private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
+
+  /** Discerns the logic for code values that load in the Log
+   *
+   * @return boolean
+   * @throws IOException
+   */
+  private boolean loadLog() throws IOException{
+
+    //Reads in the Log and stores the lines in an ArrayList
+    logReader = new LogReader();
+    fileLines = logReader.readFile();
+
+    //Loads in the fileLines from the Log
+    for(int i = 0; i < fileLines.size(); i++){
+      LogLoader logLoader = new LogLoader(fileLines.get(i));
+
+      //Load in User
+      if(logLoader.findCommmand().equals("U")){
+        String[] userInfo = logLoader.loadUser();
+        this.newUser(Uuid.parse(userInfo[0]), userInfo[1], Time.now());
+      }
+      //Load in Conversation
+      else if(logLoader.findCommmand().equals("C")){
+        String[] userInfo = logLoader.loadConversation();
+        this.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.fromMs(Long.parseLong(userInfo[3])));
+      }
+      //Load in Message
+      else if(logLoader.findCommmand().equals("M")){
+        String[] userInfo = logLoader.loadMessage();
+        this.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.fromMs(Long.parseLong(userInfo[2])));
+      }
+
+    }
+
+    return true;
+  }
+
+
+  Timer myTimer = new Timer();
+
+
+  /** Flushes stored log line info to the user
+   *
+   *
+   *
+   */
+  TimerTask task = new TimerTask(){
+    public void run(){
+      //Flushes data to document
+      for(String line : storedLogCommands){
+        outputStream.println(line);
+      }
+
+      //Pushes log commands lines to the LOG.
+      outputStream.flush();
+
+      //Clear the stored Log commands since we just flushed them to the log
+      storedLogCommands.clear();
+    }
+  };
+
+  /**Timer for Refresh Rate of loading files to LOG
+   *
+   * Flushes commands to log every 1 minute with 1 second delay.
+   *
+   * (Can change time for better optimization)
+   *
+   */
+  public void start(){
+    //Refreshes 10 seconds with a 1 second delay
+    myTimer.scheduleAtFixedRate(task, 1000, 10000);
+
+  }
+
+
+
 
 }

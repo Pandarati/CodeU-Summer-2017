@@ -15,13 +15,6 @@
 
 package codeu.chat.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.ConversationInterest;
@@ -32,8 +25,26 @@ import codeu.chat.common.Secret;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
 import codeu.chat.common.ServerInfo;
-import codeu.chat.util.*;
+import codeu.chat.util.LogReader;
+import codeu.chat.util.Logger;
+import codeu.chat.util.Serializers;
+import codeu.chat.util.Time;
+import codeu.chat.util.Timeline;
+import codeu.chat.util.Uuid;
+import codeu.chat.util.LogLoader;
 import codeu.chat.util.connections.Connection;
+
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class Server {
 
@@ -62,12 +73,29 @@ public final class Server {
   //Creates an instance of ServerInfo that helps keep the Time and version of when the server started
   private static ServerInfo serverInfo;
 
-  public Server(final Uuid id, final Secret secret, final Relay relay) {
+  //Log Files Info
+  private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
+  public PrintWriter outputStream;
+
+  public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException{
 
     this.id = id;
     this.secret = secret;
     this.controller = new Controller(id, model);
     this.relay = relay;
+
+
+    //Connects the Log to the Server
+    try {
+        outputStream = new PrintWriter(new FileWriter(serverLogLocation, true));
+    }catch (FileNotFoundException e){
+      e.printStackTrace();
+    }
+
+    //Set-ups OutputStream to append to current Log Information
+    outputStream.append("");
+    outputStream.flush();
+
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -100,6 +128,8 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
         Serializers.nullable(User.SERIALIZER).write(out, user);
+
+
       }
     });
 
@@ -248,9 +278,10 @@ public final class Server {
               LOG.error(ex, "There was a problem with parsing the ServerInfo.");
             }
 
-            // Writes out the ServerInfo Version and StartTime to the user!
-            Uuid.SERIALIZER.write(out, serverInfo.version);
-            Time.SERIALIZER.write(out, serverInfo.startTime);
+            // Writes out the ServerInfo Version and StartTime to the user
+            //Serializer OUT must be in the same order as Serializer IN
+            Uuid.SERIALIZER.write(out, serverInfo.getVersion());
+            Time.SERIALIZER.write(out, serverInfo.getStartTime());
         }
     });
 
