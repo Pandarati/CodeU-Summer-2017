@@ -129,9 +129,38 @@ public final class Server {
         Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
         Serializers.nullable(User.SERIALIZER).write(out, user);
 
-
       }
     });
+
+    // Add Member - A creator or owner wants to add a new member to a conversation.
+    this.commands.put(NetworkCode.ADD_MEMBER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final String user = Serializers.STRING.read(in);
+        final Uuid conversation = Uuid.SERIALIZER.read(in);
+        //psuedo code don't know how to implement?
+        controller.addMember(user, conversation);
+
+        Serializers.INTEGER.write(out, NetworkCode.ADD_USER_RESPONSE);
+
+      }
+    }); 
+
+    // Add Owner - A creator wants to add a new owner to a conversation.
+    this.commands.put(NetworkCode.ADD_OWNER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final String user = Serializers.STRING.read(in);
+        final Uuid conversation = Uuid.SERIALIZER.read(in);
+        //psuedo code don't know how to implement?
+        controller.addMember(user, conversation);
+
+        Serializers.INTEGER.write(out, NetworkCode.ADD_OWNER_RESPONSE);
+
+      }
+    });   
 
     // New Conversation - A client wants to add a new conversation to the back end.
     this.commands.put(NetworkCode.NEW_CONVERSATION_REQUEST,  new Command() {

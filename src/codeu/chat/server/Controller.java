@@ -189,6 +189,30 @@ public final class Controller implements RawController, BasicController {
     return user;
   }
 
+
+  @Override
+  public void addMember(Uuid user, Uuid conversation) {
+    ifIdFree(user) {
+      throw new IOException("Must add an existing user");
+    }
+    final User _user = model.userById().first(user);
+    final ConversationPayload _conversation = model.conversationPayloadById().first(conversation);
+
+    // confused on what I should set this to
+    UserControl level();
+
+    if ()
+
+  }
+
+  @Override
+  public void addMember(Uuid user, Uuid conversation) {
+    ifIdFree(user) {
+      throw new IOException("Must add an existing user");
+    }
+    
+  }
+
   @Override
   public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
 
