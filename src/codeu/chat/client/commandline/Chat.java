@@ -32,17 +32,13 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationInterest;
-import codeu.chat.common.Interest;
-import codeu.chat.common.ServerInfo;
-import codeu.chat.common.User;
-import codeu.chat.common.UserInterest;
+import codeu.chat.common.*;
 import codeu.chat.util.LogLoader;
 import codeu.chat.util.LogReader;
 import codeu.chat.util.Time;
 import codeu.chat.util.Tokenizer;
 import codeu.chat.util.Uuid;
+import com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl;
 
 public final class Chat {
 
@@ -59,13 +55,14 @@ public final class Chat {
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
+  Connector connector;
+
   private int counter = 0;
   ServerInfo info = null;
 
   public Chat(Context context) throws IOException{
     this.panels.push(createRootPanel(context));
   }
-
 
   // HANDLE COMMAND
   //
@@ -350,6 +347,10 @@ public final class Chat {
             // update User interest
             updateInterests(conversation.conversation);
             panels.push(createConversationPanel(conversation));
+
+            //Major Activity Code
+            connector.setPermissions(user.user.id, "creator");
+
           }
         } else {
           System.out.println("ERROR: Missing <title>");
@@ -671,7 +672,20 @@ public final class Chat {
     panel.register("help", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        System.out.println("USER MODE");
+
+        String permissionLevel = connector.getPermissions(conversation.user.id);
+
+        //Generates Title for current state of user
+        if(permissionLevel.equals("member")){
+          System.out.println("MEMBER MODE");
+        }
+        else if(permissionLevel.equals("owner")){
+          System.out.println("OWNER MODE");
+        }
+        else if(permissionLevel.equals("creator")){
+          System.out.println("CREATOR MODE");
+        }
+
         System.out.println(" ");
         System.out.println("  Message Commands: ");
         System.out.println("    m-list");
@@ -680,6 +694,22 @@ public final class Chat {
         System.out.println("      Add a new message to the current conversation as the current user.");
         System.out.println("    info");
         System.out.println("      Display all info about the current conversation.");
+        System.out.println(" ");
+
+        if(permissionLevel.equals("owner")){
+          System.out.println(" ");
+          System.out.println("  Owner Commands: ");
+          System.out.println("    c-permission [UUID] [Permission status: none, member]");
+          System.out.println("      Change the member bit of any of user.");
+        }
+        //If the current user is the creator
+        else if(permissionLevel.equals("creator")){
+          System.out.println(" ");
+          System.out.println("  Creator Commands: ");
+          System.out.println("    c-permission [UUID] [Permission status: none, member, owner]");
+          System.out.println("      Change the owner bit of any other user.");
+        }
+
         System.out.println(" ");
         System.out.println("  General Commands: ");
         System.out.println("    back");
@@ -713,7 +743,10 @@ public final class Chat {
       }
     });
 
-    // M-ADD (add message)
+
+
+
+      // M-ADD (add message)
     //
     // Add a command to add a new message to the current conversation when the
     // user enters "m-add" while on the conversation panel.
@@ -757,7 +790,15 @@ public final class Chat {
       }
     });
 
-    // INFO
+    panel.register("c-permission", new Panel.Command() {
+        @Override
+        public void invoke(List<String> args) {
+          //Format: c-permission [UUID] [Permission status: none, member, owner]
+
+        }
+      });
+
+      // INFO
     //
     // Add a command to print info about the current conversation when the user
     // enters "info" while on the conversation panel.
@@ -769,6 +810,21 @@ public final class Chat {
         System.out.format("  Title : %s\n", conversation.conversation.title);
         System.out.format("  Id    : UUID:%s\n", conversation.conversation.id);
         System.out.format("  Owner : %s\n", conversation.conversation.owner);
+      }
+    });
+
+    // C-PERMISSION (change permission of user)
+    //
+    // Changes the permission so a user can have appropriate access control.
+    //
+    panel.register("c-permission", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String message = args.size() > 0 ? args.get(0) : "";
+        if (message.length() > 0) {
+        } else {
+          System.out.println("ERROR: Messages must contain text");
+        }
       }
     });
 

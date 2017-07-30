@@ -19,21 +19,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import codeu.chat.client.commandline.Chat;
-import codeu.chat.common.BasicController;
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.ConversationInterest;
-import codeu.chat.common.Interest;
-import codeu.chat.common.Message;
-import codeu.chat.common.RandomUuidGenerator;
-import codeu.chat.common.RawController;
-import codeu.chat.common.User;
-import codeu.chat.common.UserInterest;
+import codeu.chat.common.*;
 import codeu.chat.util.*;
 
 public final class Controller implements RawController, BasicController {
@@ -51,9 +40,9 @@ public final class Controller implements RawController, BasicController {
   LogReader logReader;
   ArrayList<String> fileLines;
 
-
-
   ArrayList<String> storedLogCommands = new ArrayList<String>();
+
+  Connector connector;
 
   public Controller(Uuid serverId, Model model) throws IOException{
     this.model = model;
@@ -76,6 +65,7 @@ public final class Controller implements RawController, BasicController {
 
     //Start timer
     start();
+    connector = new Connector();
   }
 
   @Override
@@ -208,6 +198,8 @@ public final class Controller implements RawController, BasicController {
     if(finishedLoadingLog) {
       storedLogCommands.add("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
     }
+
+    connector.setPermissions(id, "creator");
 
     return conversation;
   }
