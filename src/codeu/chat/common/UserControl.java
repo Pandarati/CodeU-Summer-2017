@@ -16,18 +16,17 @@ public class UserControl {
 		this.type = CREATOR;
 	}
 
-
 	public UserControl(Uuid user, UserType type) {
 		this.user = user;
 		this.type = type;
 	}
 
 	public UserType getType() {
-		return type;
+		return this.type;
 	}
 
 	public Uuid getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setType(UserType type) {

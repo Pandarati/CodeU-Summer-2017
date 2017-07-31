@@ -141,8 +141,7 @@ public final class Server {
         final Uuid conversation = Uuid.SERIALIZER.read(in);
         //psuedo code don't know how to implement?
         controller.addMember(user, conversation);
-
-        Serializers.INTEGER.write(out, NetworkCode.ADD_USER_RESPONSE);
+        Serializers.INTEGER.write(out, NetworkCode.ADD_MEMBER_RESPONSE);
 
       }
     }); 
@@ -156,7 +155,6 @@ public final class Server {
         final Uuid conversation = Uuid.SERIALIZER.read(in);
         //psuedo code don't know how to implement?
         controller.addMember(user, conversation);
-
         Serializers.INTEGER.write(out, NetworkCode.ADD_OWNER_RESPONSE);
 
       }
