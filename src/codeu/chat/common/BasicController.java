@@ -67,4 +67,27 @@ public interface BasicController {
   //  representing the full state of the interest on the server.
   ConversationInterest newConversationInterest(Uuid owner, Uuid conversation);
 
+  // REMOVE INTEREST (in a User)
+  //
+  //  Remove an existing interest in a User on the server. The parameter must
+  //  correspond to an existing user or the value of false will be returned.
+  //  If the operation is successful then the interest will be removed from
+  //  the User's list of interests, and true is returned.
+  boolean removeUserInterest(Uuid owner, Uuid interest);
+
+  // REMOVE INTEREST (in a Conversation)
+  //
+  //  Remove an existing interest in a Conversation on the server. The
+  //  parameter must correspond to an existing conversation or the value of false
+  //  will be returned. If the operation is successful then the interest will be
+  //  removed from the User's list of interests, and true is returned.
+  boolean removeConversationInterest(Uuid owner, Uuid conversation);
+
+  // STATUS UPDATE
+  //
+  // A status update must reset all interest activity, specifically the
+  // the set of conversations for the user interest, and the missed messages
+  // for the conversation interest.
+  String statusUpdate(Uuid user);
+
 }

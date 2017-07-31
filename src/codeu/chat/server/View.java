@@ -24,6 +24,7 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.ConversationInterest;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.SinglesView;
 import codeu.chat.common.User;
@@ -78,13 +79,13 @@ public final class View implements BasicView, SinglesView {
     return info;
   }
 
-  @Override
-  public Collection<UserInterest> getUserInterests() { return  all(model.userInterestById()); }
+  //@Override
+  //public Collection<UserInterest> getUserInterests() { return  all(model.userInterestById()); }
 
-  @Override
-  public Collection<ConversationInterest> getConversationInterests() {
-    return all(model.conversationInterestById());
-  }
+  //@Override
+  //public Collection<ConversationInterest> getConversationInterests() {
+  //  return all(model.conversationInterestById());
+ // }
 
   @Override
   public User findUser(Uuid id) { return model.userById().first(id); }

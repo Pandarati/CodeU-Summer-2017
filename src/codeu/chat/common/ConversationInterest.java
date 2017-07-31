@@ -3,6 +3,8 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
@@ -19,6 +21,7 @@ public final class ConversationInterest extends Interest {
             Uuid.SERIALIZER.write(out, value.id);
             Uuid.SERIALIZER.write(out, value.owner);
             Uuid.SERIALIZER.write(out, value.interest);
+            Serializers.INTEGER.write(out, value.messageCount);
             Time.SERIALIZER.write(out, value.creation);
 
         }
@@ -30,28 +33,34 @@ public final class ConversationInterest extends Interest {
                     Uuid.SERIALIZER.read(in),
                     Uuid.SERIALIZER.read(in),
                     Uuid.SERIALIZER.read(in),
+                    Serializers.INTEGER.read(in),
                     Time.SERIALIZER.read(in)
             );
 
         }
     };
 
-    public Integer messageCount;
+    public int messageCount;
 
-    // constructor for a User interest
     public ConversationInterest (Uuid id, Uuid owner, Uuid conversation, Time creation){
         super(id, owner, conversation, creation);
-        messageCount = new Integer(0);
+        messageCount = 0;
     }
 
+    public ConversationInterest (Uuid id, Uuid owner, Uuid conversation, int messageCounter, Time creation){
+        super(id, owner, conversation, creation);
+        messageCount = messageCounter;
+    }
+/*
     public ConversationInterest (Uuid owner, Uuid conversation, Time creation){
         super(owner, conversation, creation);
-        messageCount = new Integer(0);
+        messageCount = 0;
     }
+    */
 
     @Override
     public void updateCount (){
-        messageCount = new Integer(messageCount.intValue() + 1);
+        messageCount = messageCount + 1;
     }
 
     @Override
@@ -59,7 +68,7 @@ public final class ConversationInterest extends Interest {
 
     @Override
     public void reset (){
-        messageCount = new Integer(0);
+        messageCount = 0;
     }
 
     public String toString() {

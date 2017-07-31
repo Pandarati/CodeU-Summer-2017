@@ -14,16 +14,22 @@
 
 package codeu.chat.server;
 
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import codeu.chat.client.commandline.Chat;
+
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -39,6 +45,10 @@ import codeu.chat.util.*;
 public final class Controller implements RawController, BasicController {
 
   private final static Logger.Log LOG = Logger.newLog(Controller.class);
+
+  // Map to store all the Interests in the system, for every User there is a set
+  // of Interests
+  private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
 
   private final Model model;
   private final Uuid.Generator uuidGenerator;
@@ -108,6 +118,7 @@ public final class Controller implements RawController, BasicController {
 
     final User foundUser = model.userById().first(author);
     final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
+    final ConversationHeader conversationHeader = model.conversationById().first(conversation);
 
     Message message = null;
 
@@ -119,7 +130,7 @@ public final class Controller implements RawController, BasicController {
 
 
       updateConversationInterests(conversation);
-      updateUserInterests(author, conversation);
+      updateUserInterests(author, conversationHeader);
 
       // Find and update the previous "last" message so that it's "next" value
       // will point to the new message.
@@ -165,6 +176,7 @@ public final class Controller implements RawController, BasicController {
 
       user = new User(id, name, creationTime);
       model.add(user);
+      interestMap.put(user.id, new HashSet<Interest>());
 
       LOG.info(
           "newUser success (user.id=%s user.name=%s user.time=%s)",
@@ -201,7 +213,7 @@ public final class Controller implements RawController, BasicController {
       model.add(conversation);
       LOG.info("Conversation added: " + id);
 
-      updateUserInterests(owner, conversation.id);
+      updateUserInterests(owner, conversation);
     }
 
     //After recreating the state of the server, start storing the newConversation() command calls.
@@ -221,8 +233,9 @@ public final class Controller implements RawController, BasicController {
         UserInterest interest = null;
 
         if(foundUser != null && interestUser != null && isIdFree(id)) {
-            interest = new UserInterest(id, owner, userId, creationTime);
+            interest = new UserInterest(id, owner, userId, new HashSet<ConversationHeader> (), creationTime);
             model.add(interest);
+            interestMap.get(foundUser.id).add(interest);
             LOG.info("User interest added: " + id);
         }
 
@@ -238,39 +251,138 @@ public final class Controller implements RawController, BasicController {
         ConversationInterest interest = null;
 
         if(foundUser != null && foundConversation != null && isIdFree(id)) {
-            interest = new ConversationInterest(id, owner, conversation, creationTime);
+            interest = new ConversationInterest(id, owner, conversation, 0, creationTime);
             model.add(interest);
+            interestMap.get(foundUser.id).add(interest);
             LOG.info("Conversation interest added: " + id);
         }
 
         return interest;
     }
 
-    private void updateUserInterests(Uuid author, Uuid conversation){
-        final ConversationHeader foundConversation = model.conversationById().first(conversation);
-        LOG.info("Current Conversation: " + foundConversation.title);
+    @Override
+    public boolean removeUserInterest (Uuid owner, Uuid interest){
 
-        // find all UserInterests with the current user (author) as an interest and
-        // add the conversation to its list
-        for (final UserInterest value : model.userInterestByUserId().all()) {
-            if(Uuid.equals(author, value.interest)) {
-                value.conversations.add(foundConversation);
-                LOG.info("User Interest updated: " + value.conversations.toString());
+        final User foundUser = model.userById().first(owner);
+        final User interestUser = model.userById().first(interest);
+
+        if(foundUser != null && interestUser != null) {
+            // fetch the current user's interests
+            Iterator<Interest> iterator = interestMap.get(owner).iterator();
+            while (iterator.hasNext()) {
+                Interest current = iterator.next();
+
+                // check if the interest is a UserInterest
+                if (current.getClass() == UserInterest.class) {
+                    // check if the interest is in the desired user
+                    if (Uuid.equals(current.interest, interest)) {
+                        // if so we remove that user interest
+                        LOG.info("User Interest removed");
+                        return interestMap.get(owner).remove(current);
+                    }
+                }
+            }
+        }
+        LOG.info("User Interest failed to be removed");
+        return false;
+
+        // removed = interestMap.get(owner).remove(interest);
+    }
+
+    @Override
+    public boolean removeConversationInterest(Uuid owner, Uuid conversation){
+
+        final User foundUser = model.userById().first(owner);
+        final ConversationHeader foundConversation = model.conversationById().first(conversation);
+
+        if(foundUser != null && foundConversation != null) {
+            // fetch the current user's interests
+            Iterator<Interest> iterator = interestMap.get(owner).iterator();
+            while (iterator.hasNext()) {
+                Interest current = iterator.next();
+
+                // check if the interest is a ConversationInterest
+                if (current.getClass() == ConversationInterest.class) {
+                    // check if the interest is in the desired conversation
+                    if (Uuid.equals(current.interest, conversation))
+                        // if so we remove that conversation interest
+                        LOG.info("Conversation Interest removed");
+                    return interestMap.get(owner).remove(current);
+                }
+            }
+        }
+
+        LOG.info("Conversation Interest failed to be removed");
+        return false;
+    }
+
+    private void updateUserInterests(Uuid author, ConversationHeader conversation){
+
+        for (HashSet<Interest> interests : interestMap.values()) {
+            Iterator<Interest> iterator = interests.iterator();
+            while(iterator.hasNext()){
+                Interest current = iterator.next();
+
+                // check if the interest is a UserInterest
+                if (current.getClass() == UserInterest.class) {
+                    // check if someone is interest in the current user
+                    if(Uuid.equals(current.interest, author)) {
+                        // if so we update that user's interest
+                        current.addConversation(conversation);
+                        LOG.info("User Interest updated: " + current.toString());
+                    }
+                }
             }
         }
     }
 
     private void updateConversationInterests(Uuid conversation){
-       // final ConversationHeader foundConversation = model.conversationById().first(conversation);
 
-        // find all ConversationInterests with the current conversation as an interest
-        // and add to its message count
-        for (final ConversationInterest value : model.conversationInterestByConversationId().all()) {
-            if (Uuid.equals(conversation, value.interest)) {
-                value.updateCount();
-                LOG.info("Conversation Interest updated: " + conversation + ", " + value.messageCount);
+        for (HashSet<Interest> interests : interestMap.values()) {
+            Iterator<Interest> iterator = interests.iterator();
+            while(iterator.hasNext()){
+                Interest current = iterator.next();
+
+                // check if the interest is a ConversationInterest
+                if (current.getClass() == ConversationInterest.class) {
+                    // check if someone is interested in this conversation
+                    if (Uuid.equals(current.interest, conversation)) {
+                        // if so we update that user's interest
+                        current.updateCount();
+                        LOG.info("Conversation Interest updated: " + conversation + ", " + current.toString());
+                    }
+                }
             }
         }
+    }
+
+    @Override
+    public String statusUpdate(Uuid user) {
+        String conversationInterests = "";
+        String userInterests = "";
+
+        Iterator<Interest> iterator = interestMap.get(user).iterator();
+
+        while(iterator.hasNext()){
+            Interest current = iterator.next();
+
+            if (current.getClass() == ConversationInterest.class) {
+                conversationInterests = conversationInterests + current.toString() + "\n";
+                // reset the information
+                current.reset();
+            }
+
+            if (current.getClass() == UserInterest.class) {
+                userInterests = userInterests + current.toString() + "\n";
+                // reset the information
+                 current.reset();
+            }
+        }
+
+        LOG.info("Status Update completed");
+
+        return "Status Update: \n\n--- update: user interests ---\n" + userInterests
+                + "\n--- update: conversation interests ---\n" + conversationInterests ;
     }
 
   private Uuid createId() {

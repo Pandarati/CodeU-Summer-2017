@@ -197,8 +197,6 @@ public final class Chat {
           if (user == null) {
             System.out.println("ERROR: Failed to create new user");
           }
-          else
-            interestMap.put(user.user.id, new HashSet<Interest>());
         } else {
           System.out.println("ERROR: Missing <username>");
         }
@@ -286,8 +284,8 @@ public final class Chat {
         System.out.println("  Conversation Commands: ");
         System.out.println("    c-list");
         System.out.println("      List all conversations that the current user can interact with.");
-        System.out.println("    i-list");
-        System.out.println("      List all interests that the current user can interact with.");
+       // System.out.println("    i-list");
+       // System.out.println("      List all interests that the current user can interact with.");
         System.out.println("    c-add <title>");
         System.out.println("      Add a new conversation with the given title and join it as the current user.");
         System.out.println("    c-join <title>");
@@ -300,8 +298,10 @@ public final class Chat {
         System.out.println("      Remove a user interest to stop following his or her activity.");
         System.out.println("    convI-add <title>");
         System.out.println("      Add a new interest in a given conversation title and follow its activity.");
-        System.out.println("    convI-remove <name>");
-        System.out.println("      Remove a conversation interest to stop following its activity");
+        System.out.println("    userI-remove <name>");
+        System.out.println("      Remove an existing interest in a given user and stop following their activity.");
+        System.out.println("    convI-remove <title>");
+        System.out.println("      Remove an existing interest in a given conversation title and stop following its activity.");
         System.out.println("    status-update");
         System.out.println("      Get a status update on a user and their activity.");
         System.out.println(" ");
@@ -348,29 +348,11 @@ public final class Chat {
             System.out.println("ERROR: Failed to create new conversation");
           } else {
             // update User interest
-            updateInterests(conversation.conversation);
+           // updateInterests(conversation.conversation);
             panels.push(createConversationPanel(conversation));
           }
         } else {
           System.out.println("ERROR: Missing <title>");
-        }
-      }
-
-      // update the User interests
-      private void updateInterests(ConversationHeader conversation){
-        for (HashSet<Interest> interests : interestMap.values()) {
-          Iterator<Interest> iterator = interests.iterator();
-          while(iterator.hasNext()){
-            Interest current = iterator.next();
-
-            // check if the interest is a UserInterest
-            if (current.getClass() == UserInterest.class) {
-              // check if someone is interest in the current user
-              if(Uuid.equals(current.interest, user.user.id))
-                // if so we update that user's interest
-                current.addConversation(conversation);
-            }
-          }
         }
       }
     });
@@ -408,6 +390,7 @@ public final class Chat {
       }
     });
 
+    /*
     //i-list (list interests)
     //
     // Add a command that will print all interests when the user enters
@@ -423,7 +406,7 @@ public final class Chat {
         }
       }
     });
-
+*/
     // userI-add (add user interest)
     //
     // Add a command to add a new interest when the user enters
@@ -443,8 +426,7 @@ public final class Chat {
             System.out.println("ERROR: Failed to create new user interest");
           } else {
             // create a user interest and add it to the current user's interests
-            UserInterest interest = new UserInterest(user.user.id, userInterest.user.id, Time.now());
-            interestMap.get(user.user.id).add(interest);
+            UserInterest interest = user.addUserInterest(name);
           }
         } else {
           System.out.println("ERROR: Enter valid user name");
@@ -480,9 +462,7 @@ public final class Chat {
             System.out.println("ERROR: Failed to create new conversation interest");
           } else {
             // create a conversation interest and add it to the current user's interests
-            ConversationInterest interest =
-                    new ConversationInterest(user.user.id, conversationContext.conversation.id, Time.now());
-            interestMap.get(user.user.id).add(interest);
+            ConversationInterest interest = user.addConversationInterest(title);
           }
         } else {
           System.out.println("ERROR: Enter valid conversation title");
@@ -510,44 +490,11 @@ public final class Chat {
       public void invoke(List<String> args) {
         final String title = args.size() > 0 ? args.get(0) : "";
         if (title.length() > 0) {
-          final ConversationContext conversationContext = findConversation(title);
-
-          if (conversationContext == null) {
-            System.out.println("ERROR: No conversation found");
-          } else {
-            if (!removeConversationInterest(conversationContext))
-              System.out.println("ERROR: Interest failed to be removed");
-          }
+          if (!user.removeConversationInterest(title))
+            System.out.println("ERROR: Interest failed to be removed");
         } else {
           System.out.println("ERROR: Enter valid conversation title");
         }
-      }
-
-      private boolean removeConversationInterest(ConversationContext conversation) {
-        // fetch the current user's interests
-        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
-        while(iterator.hasNext()){
-          Interest current = iterator.next();
-
-            // check if the interest is a ConversationInterest
-            if (current.getClass() == ConversationInterest.class) {
-              // check if the interest is in the desired conversation
-              if (Uuid.equals(current.interest, conversation.conversation.id))
-                // if so we remove that conversation interest
-                return interestMap.get(user.user.id).remove(current);
-            }
-          }
-          return false;
-        }
-
-      // find the ConversationContext for the desired conversation
-      private ConversationContext findConversation(String title) {
-        for (final ConversationContext other : user.conversations()) {
-          if (title.equals(other.conversation.title)) {
-            return other;
-          }
-        }
-        return null;
       }
     });
 
@@ -562,44 +509,11 @@ public final class Chat {
       public void invoke(List<String> args) {
         final String name = args.size() > 0 ? args.get(0) : "";
         if (name.length() > 0 ) {
-          final UserContext userContext = findUser(name);
-
-          if (userContext == null) {
-            System.out.println("ERROR: No user found");
-          } else {
-            if (!removeUserInterest(userContext))
-              System.out.println("ERROR: Interest failed to be removed");
-          }
+          if (!user.removeUserInterest(name))
+            System.out.println("ERROR: Interest failed to be removed");
         } else {
           System.out.println("ERROR: Enter valid user name");
         }
-      }
-
-      private boolean removeUserInterest(UserContext other) {
-        // fetch the current user's interests
-        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
-        while(iterator.hasNext()){
-          Interest current = iterator.next();
-
-          // check if the interest is a UserInterest
-          if (current.getClass() == UserInterest.class) {
-            // check if the interest is in the desired user
-            if (Uuid.equals(current.interest, other.user.id))
-              // if so we remove that user interest
-              return interestMap.get(user.user.id).remove(current);
-          }
-        }
-        return false;
-      }
-
-      private UserContext findUser(String name) {
-        for (final UserContext other : user.users()) {
-          User otherUser = other.user;
-          if (name.equals(otherUser.name)) {
-            return other;
-          }
-        }
-        return null;
       }
     });
 
@@ -612,30 +526,7 @@ public final class Chat {
     panel.register("status-update", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-
-        Iterator<Interest> iterator = interestMap.get(user.user.id).iterator();
-        String userInterests = "";
-        String conversationInterests = "";
-        while(iterator.hasNext()){
-          Interest current = iterator.next();
-
-          if (current.getClass() == ConversationInterest.class) {
-            conversationInterests = conversationInterests + current.toString() + "\n";
-            // reset the information
-            current.reset();
-          }
-
-          if (current.getClass() == UserInterest.class) {
-            userInterests = userInterests + current.toString() + "\n";
-            // reset the information
-            current.reset();
-          }
-        }
-
-        System.out.println("--- update: user interests ---");
-        System.out.println(userInterests);
-        System.out.println("--- update: conversation interests ---");
-        System.out.println(conversationInterests);
+        System.out.println(user.statusUpdate());
       }
 
     });
@@ -724,35 +615,9 @@ public final class Chat {
         final String message = args.size() > 0 ? args.get(0) : "";
         if (message.length() > 0) {
           conversation.add(message);
-          updateInterests();
+          //updateInterests();
         } else {
           System.out.println("ERROR: Messages must contain text");
-        }
-      }
-
-      // update the both User and Conversation interests
-      private void updateInterests(){
-        for (HashSet<Interest> interests : interestMap.values()) {
-          Iterator<Interest> iterator = interests.iterator();
-          while(iterator.hasNext()){
-            Interest current = iterator.next();
-
-            // check if the interest is a ConversationInterest
-            if (current.getClass() == ConversationInterest.class) {
-              // check if someone is interested in this conversation
-              if (Uuid.equals(current.interest, conversation.conversation.id))
-                // if so we update that user's interest
-                current.updateCount();
-            }
-
-            // check if the interest is a UserInterest
-            if (current.getClass() == UserInterest.class) {
-              // check if someone is interested in this user
-              if(Uuid.equals(current.interest, conversation.user.id))
-                // if so we update that user's interest
-                current.addConversation(conversation.conversation);
-            }
-          }
         }
       }
     });

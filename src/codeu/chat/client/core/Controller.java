@@ -164,4 +164,78 @@ final class Controller implements BasicController {
 
     return response;
   }
+
+  @Override
+  public boolean removeUserInterest(Uuid owner, Uuid interest) {
+
+    boolean response = false;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.REMOVE_USER_INTEREST_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), owner);
+      Uuid.SERIALIZER.write(connection.out(), interest);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REMOVE_USER_INTEREST_RESPONSE) {
+        response = Serializers.nullable(Serializers.BOOLEAN).read(connection.in());
+        LOG.info("removeUserInterest: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
+  @Override
+  public boolean removeConversationInterest(Uuid owner, Uuid conversation) {
+
+    boolean response = false;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.REMOVE_CONVERSATION_INTEREST_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), owner);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REMOVE_CONVERSATION_INTEREST_RESPONSE) {
+        response = Serializers.nullable(Serializers.BOOLEAN).read(connection.in());
+        LOG.info("removeConversationInterest: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
+  @Override
+  public String statusUpdate(Uuid user) {
+
+    String response = null;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.STATUS_UPDATE_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), user);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.STATUS_UPDATE_RESPONSE) {
+        response = Serializers.nullable(Serializers.STRING).read(connection.in());
+        LOG.info("Status Update: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+    return response;
+  }
+
 }

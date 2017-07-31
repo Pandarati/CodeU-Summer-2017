@@ -16,11 +16,15 @@ package codeu.chat.client.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationInterest;
+import codeu.chat.common.Interest;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
 import codeu.chat.util.Uuid;
@@ -46,6 +50,69 @@ public final class UserContext {
     }
 
     return all;
+  }
+
+  public UserInterest addUserInterest(String name) {
+    User other = findUser(name);
+    if (other == null)
+      return null;
+    else {
+      final UserInterest interest = controller.newUserInterest(user.id, other.id);
+      return interest;
+    }
+  }
+
+  public ConversationInterest addConversationInterest(String title) {
+    ConversationHeader conversation = findConversation(title);
+    if (conversation == null)
+      return null;
+    else {
+      final ConversationInterest interest = controller.newConversationInterest(user.id, conversation.id);
+      return interest;
+    }
+  }
+
+  public boolean removeUserInterest(String name) {
+    User other = findUser(name);
+    if (other == null)
+      return false;
+    else {
+      return controller.removeUserInterest(user.id, other.id);
+    }
+  }
+
+  public boolean removeConversationInterest(String title) {
+    ConversationHeader conversation = findConversation(title);
+    if (conversation == null)
+      return false;
+    else {
+      return controller.removeConversationInterest(user.id, conversation.id);
+    }
+  }
+
+  // Find the first user by entered name
+  private User findUser(String name) {
+    for (final User other : view.getUsers()) {
+      String otherName = other.name;
+      if (name.equals(otherName)) {
+        return other;
+      }
+    }
+    return null;
+  }
+
+  // Find the first conversation entered by title
+  private ConversationHeader findConversation(String title) {
+    for (final ConversationHeader conversation : view.getConversations()) {
+      if (title.equals(conversation.title)) {
+        return conversation;
+      }
+    }
+    return null;
+  }
+
+  public String statusUpdate() {
+    return controller.statusUpdate(user.id);
   }
 
   public ConversationContext start(String name) {

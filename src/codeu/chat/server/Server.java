@@ -175,6 +175,47 @@ public final class Server {
         }
     });
 
+    // Remove Interest - A client wants to remove an interest in a user from the back end
+    this.commands.put(NetworkCode.REMOVE_USER_INTEREST_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid owner = Uuid.SERIALIZER.read(in);
+        final Uuid userId = Uuid.SERIALIZER.read(in);
+        final boolean removed = controller.removeUserInterest(owner, userId);
+
+        Serializers.INTEGER.write(out, NetworkCode.REMOVE_USER_INTEREST_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, removed);
+      }
+    });
+
+    // Remove Interest - A client wants to remove an interest in a conversation from the back end
+    this.commands.put(NetworkCode.REMOVE_CONVERSATION_INTEREST_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid owner = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final boolean removed = controller.removeConversationInterest(owner, conversationId);
+
+        Serializers.INTEGER.write(out, NetworkCode.REMOVE_CONVERSATION_INTEREST_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, removed);
+      }
+    });
+
+    // Status Update - A client wants a status update on their interests from the back end
+    this.commands.put(NetworkCode.STATUS_UPDATE_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final String update = controller.statusUpdate(user);
+
+        Serializers.INTEGER.write(out, NetworkCode.STATUS_UPDATE_RESPONSE);
+        Serializers.nullable(Serializers.STRING).write(out, update);
+      }
+    });
+
     // Get Users - A client wants to get all the users from the back end.
     this.commands.put(NetworkCode.GET_USERS_REQUEST, new Command() {
       @Override
@@ -199,6 +240,7 @@ public final class Server {
       }
     });
 
+    /*
     // Get User Interests - A client wants to get all the user interests from the back end.
     this.commands.put(NetworkCode.GET_ALL_USER_INTERESTS_REQUEST, new Command() {
         @Override
@@ -222,6 +264,7 @@ public final class Server {
             Serializers.collection(ConversationInterest.SERIALIZER).write(out, conversationInterests);
           }
       });
+      */
 
     // Get Server Request - A client whats to get all the request to the server from the back end.
     this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command(){
