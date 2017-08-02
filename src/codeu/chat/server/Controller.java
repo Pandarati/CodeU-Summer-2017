@@ -46,6 +46,13 @@ public final class Controller implements RawController, BasicController {
 
   private final static Logger.Log LOG = Logger.newLog(Controller.class);
 
+  // Log commands
+  private final static String ADD_USER = "ADD-USER";
+  private final static String ADD_MESSAGE = "ADD-MESSAGE";
+  private final static String ADD_CONVERSATION = "ADD-CONVERSATION";
+  private final static String ADD_USER_INTEREST = "ADD-USER-INTEREST";
+  private final static String ADD_CONVERSATION_INTEREST = "ADD-CONVERSATION-INTEREST";
+
   // Map to store all the Interests in the system, for every User there is a set
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
@@ -157,11 +164,11 @@ public final class Controller implements RawController, BasicController {
 
       // Update the conversation to point to the new last message as it has changed.
       foundConversation.lastMessage = message.id;
-    }
 
-    //After recreating the state of the server, start storing the newMessage() command calls.
-    if(finishedLoadingLog) {
-      storedLogCommands.add("ADD-MESSAGE " + conversation + " " + id + " " + creationTime.inMs() + " " + author + " \"" + body + "\"");
+      //After recreating the state of the server, start storing the newMessage() command calls.
+      if(finishedLoadingLog) {
+        storedLogCommands.add(ADD_MESSAGE + " " + conversation + " " + id + " " + creationTime.inMs() + " " + author + " \"" + body + "\"");
+      }
     }
 
     return message;
@@ -184,6 +191,10 @@ public final class Controller implements RawController, BasicController {
           name,
           creationTime);
 
+      //After recreating the state of the server, start storing the newUser() command calls.
+      if(finishedLoadingLog) {
+        storedLogCommands.add(ADD_USER + " " + user.id + " \"" + name + "\" " + creationTime.inMs());
+      }
     } else {
 
       LOG.info(
@@ -191,11 +202,6 @@ public final class Controller implements RawController, BasicController {
           id,
           name,
           creationTime);
-    }
-
-    //After recreating the state of the server, start storing the newUser() command calls.
-    if(finishedLoadingLog) {
-      storedLogCommands.add("ADD-USER " + user.id + " \"" + name + "\" " + creationTime.inMs());
     }
 
     return user;
@@ -214,11 +220,11 @@ public final class Controller implements RawController, BasicController {
       LOG.info("Conversation added: " + id);
 
       updateUserInterests(owner, conversation);
-    }
 
-    //After recreating the state of the server, start storing the newConversation() command calls.
-    if(finishedLoadingLog) {
-      storedLogCommands.add("ADD-CONVERSATION " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
+      //After recreating the state of the server, start storing the newConversation() command calls.
+      if(finishedLoadingLog) {
+        storedLogCommands.add(ADD_CONVERSATION + " " + id + " \"" + title + "\" " + owner + " " + creationTime.inMs());
+      }
     }
 
     return conversation;
@@ -237,6 +243,11 @@ public final class Controller implements RawController, BasicController {
             model.add(interest);
             interestMap.get(foundUser.id).add(interest);
             LOG.info("User interest added: " + id);
+
+          //After recreating the state of the server, start storing the newUserInterest() command calls.
+          if(finishedLoadingLog) {
+            storedLogCommands.add(ADD_USER_INTEREST + " " + id + " " + owner + " " + userId + " " + creationTime.inMs());
+          }
         }
 
         return interest;
@@ -255,6 +266,11 @@ public final class Controller implements RawController, BasicController {
             model.add(interest);
             interestMap.get(foundUser.id).add(interest);
             LOG.info("Conversation interest added: " + id);
+
+          //After recreating the state of the server, start storing the newConversationInterest() command calls.
+          if(finishedLoadingLog) {
+            storedLogCommands.add(ADD_CONVERSATION_INTEREST + " " + id + " " + owner + " " + conversation + " " + creationTime.inMs());
+          }
         }
 
         return interest;
@@ -424,35 +440,42 @@ public final class Controller implements RawController, BasicController {
     //Loads in the fileLines from the Log
     for(int i = 0; i < fileLines.size(); i++){
       LogLoader logLoader = new LogLoader(fileLines.get(i));
+      String command = logLoader.readCommand();
 
-      //Load in User
-      if(logLoader.findCommmand().equals("U")){
-        String[] userInfo = logLoader.loadUser();
-        this.newUser(Uuid.parse(userInfo[0]), userInfo[1], Time.now());
+    //Load in User
+      if(command.equals(ADD_USER)){
+        String[] params = logLoader.readParameters(3);
+        newUser(Uuid.parse(params[0]), params[1], Time.fromMs(Long.parseLong(params[2])));
       }
       //Load in Conversation
-      else if(logLoader.findCommmand().equals("C")){
-        String[] userInfo = logLoader.loadConversation();
-        this.newConversation(Uuid.parse(userInfo[0]), userInfo[1], Uuid.parse(userInfo[2]), Time.fromMs(Long.parseLong(userInfo[3])));
+      else if(command.equals(ADD_CONVERSATION)){
+        String[] params = logLoader.readParameters(4);
+        newConversation(Uuid.parse(params[0]), params[1], Uuid.parse(params[2]), Time.fromMs(Long.parseLong(params[3])));
       }
       //Load in Message
-      else if(logLoader.findCommmand().equals("M")){
-        String[] userInfo = logLoader.loadMessage();
-        this.newMessage(Uuid.parse(userInfo[1]), Uuid.parse(userInfo[3]), Uuid.parse(userInfo[0]), userInfo[4], Time.fromMs(Long.parseLong(userInfo[2])));
+      else if(command.equals(ADD_MESSAGE)){
+        String[] params = logLoader.readParameters(5);
+        newMessage(Uuid.parse(params[1]), Uuid.parse(params[3]), Uuid.parse(params[0]), params[4], Time.fromMs(Long.parseLong(params[2])));
       }
-
+      else if (command.equals(ADD_USER_INTEREST)) {
+        String[] params = logLoader.readParameters(4);
+        newUserInterest(Uuid.parse(params[0]), Uuid.parse(params[1]), Uuid.parse(params[2]), Time.fromMs(Long.parseLong(params[3])));
+      }
+      else if (command.equals(ADD_CONVERSATION_INTEREST)) {
+        String[] params = logLoader.readParameters(4);
+        newConversationInterest(Uuid.parse(params[0]), Uuid.parse(params[1]), Uuid.parse(params[2]), Time.fromMs(Long.parseLong(params[3])));
+      } else {
+        LOG.info("Unexpected log line: \"%s\"", fileLines.get(i));
+      }
     }
 
     return true;
   }
 
-
   Timer myTimer = new Timer();
 
 
   /** Flushes stored log line info to the user
-   *
-   *
    *
    */
   TimerTask task = new TimerTask(){
@@ -482,8 +505,5 @@ public final class Controller implements RawController, BasicController {
     myTimer.scheduleAtFixedRate(task, 1000, 10000);
 
   }
-
-
-
 
 }

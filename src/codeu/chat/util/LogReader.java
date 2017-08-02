@@ -10,11 +10,11 @@ import java.util.Scanner;
 public class LogReader {
 
     //Log Files Info
+    // TODO: Avoid duplicating constants across files in the same package.
     private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
     private static Scanner inputStream;
 
     ArrayList<String> fileLines;
-
 
     public LogReader() throws IOException{
 
@@ -25,9 +25,7 @@ public class LogReader {
         }
 
         fileLines = new ArrayList<String>();
-
     }
-
 
     //Reads in the file and stores in ArrayList
     public ArrayList<String> readFile(){
@@ -40,10 +38,4 @@ public class LogReader {
         }
         return fileLines;
     }
-
-
-
-
-
-
 }
