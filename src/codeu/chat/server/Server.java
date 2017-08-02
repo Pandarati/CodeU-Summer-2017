@@ -74,6 +74,9 @@ public final class Server {
   private static ServerInfo serverInfo;
 
   //Log Files Info
+  // TODO: two issues here:
+  // 1) do not hardcode full path! There is a parameter to the server that indicates server store folder.
+  // 2) do not assume Windows :). On linux, the whole string is a single file name, as is :).
   private static String serverLogLocation = "C:\\git\\CodeU-Summer-2017\\serverdata\\serverLog.txt";
   public PrintWriter outputStream;
 
