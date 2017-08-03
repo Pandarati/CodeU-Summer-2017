@@ -39,6 +39,7 @@ import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.common.UserControl;
 import codeu.chat.common.UserInterest;
 import codeu.chat.util.*;
 
@@ -49,6 +50,7 @@ public final class Controller implements RawController, BasicController {
   // Map to store all the Interests in the system, for every User there is a set
   // of Interests
   private HashMap<Uuid, HashSet<Interest>> interestMap = new HashMap<Uuid, HashSet<Interest>>();
+  private HashMap<Uuid, HashSet<UserControl>> permissionMap = new HashMap<Uuid, HashSet<UserControl>>();
 
   private final Model model;
   private final Uuid.Generator uuidGenerator;
@@ -211,6 +213,9 @@ public final class Controller implements RawController, BasicController {
     if (foundOwner != null && isIdFree(id)) {
       conversation = new ConversationHeader(id, owner, creationTime, title);
       model.add(conversation);
+      permissionMap.put(conversation.id, new HashSet<UserControl>());
+      UserControl creator = new UserControl(owner);
+      permissionMap.get(conversation.id).add(creator);
       LOG.info("Conversation added: " + id);
 
       updateUserInterests(owner, conversation);
@@ -222,6 +227,71 @@ public final class Controller implements RawController, BasicController {
     }
 
     return conversation;
+  }
+
+  // Serena's code
+  @Override
+  public boolean addMember(Uuid user, Uuid conversation, Uuid member) {
+
+      final User foundUser = model.userById().first(user);
+      final ConversationHeader foundConversation = model.conversationById().first(conversation);
+      final User foundMember = model.userById().first(member);
+
+      if(foundUser != null && foundConversation != null && foundMember != null) {
+
+          Iterator<UserControl> iterator = permissionMap.get(conversation).iterator();
+          while (iterator.hasNext()) {
+              UserControl current = iterator.next();
+
+              // check if the current UserControl is the current user
+              if (Uuid.equals(current.getUser(), user)) {
+                  // check that the role of the user is either Owner or Creator
+                  if (current.isCreator() || current.isOwner()) {
+                      // if so we add the member
+                      UserControl newMember = new UserControl(conversation, true);
+                      permissionMap.get(conversation).add(newMember);
+                      LOG.info("Permission granted: Member added");
+                      return true;
+                  }
+                  else
+                      LOG.info("Permission denied");
+              }
+          }
+      }
+
+      return false;
+  }
+
+  @Override
+  public boolean addOwner(Uuid user, Uuid conversation, Uuid owner) {
+
+      final User foundUser = model.userById().first(user);
+      final ConversationHeader foundConversation = model.conversationById().first(conversation);
+      final User foundOwner = model.userById().first(owner);
+
+      if(foundUser != null && foundConversation != null && foundOwner != null) {
+
+          Iterator<UserControl> iterator = permissionMap.get(conversation).iterator();
+          while (iterator.hasNext()) {
+              UserControl current = iterator.next();
+
+              // check if the current UserControl is the current user
+              if (Uuid.equals(current.getUser(), user)) {
+                  // check that the role of the user is Creator
+                  if (current.isCreator()) {
+                      // if so we add the owner
+                      UserControl newOwner = new UserControl(conversation, false);
+                      permissionMap.get(conversation).add(newOwner);
+                      LOG.info("Permission granted: Owner added");
+                      return true;
+                  }
+                  else
+                      LOG.info("Permission denied");
+              }
+          }
+      }
+
+      return false;
   }
 
   @Override

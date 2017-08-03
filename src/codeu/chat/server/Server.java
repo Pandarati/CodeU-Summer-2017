@@ -147,6 +147,37 @@ public final class Server {
       }
     });
 
+    // Add Member - A creator or owner wants to add a new member to a conversation.
+    this.commands.put(NetworkCode.ADD_MEMBER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final Uuid member = Uuid.SERIALIZER.read(in);
+        final boolean added = controller.addMember(user, conversationId, member);
+
+        Serializers.INTEGER.write(out, NetworkCode.ADD_MEMBER_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, added);
+      }
+    });
+
+    // Add Owner - A creator wants to add a new owner to a conversation.
+    this.commands.put(NetworkCode.ADD_OWNER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final Uuid owner = Uuid.SERIALIZER.read(in);
+        final boolean added = controller.addOwner(user, conversationId, owner);
+
+        Serializers.INTEGER.write(out, NetworkCode.ADD_OWNER_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, added);
+
+      }
+    });
+
     // New Interest - A client wants to add a new interest in a user to the back end.
     this.commands.put(NetworkCode.NEW_USER_INTEREST_REQUEST,  new Command() {
         @Override

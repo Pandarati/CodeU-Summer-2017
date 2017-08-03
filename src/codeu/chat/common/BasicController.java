@@ -90,4 +90,20 @@ public interface BasicController {
   // for the conversation interest.
   String statusUpdate(Uuid user);
 
+  // ADD MEMBER
+  //
+  // Assigns a MEMBER role and corresponding permissions to the specified member.
+  // The user must have the appropriate role/permission to add a member; if
+  // they do the value of true is returned and the member role assigned.
+  // Else the value of false is returned.
+  boolean addMember(Uuid user, Uuid conversation, Uuid member);
+
+  // ADD OWNER
+  //
+  // Assigns a OWNER role and corresponding permissions to the specified owner.
+  // The user must have the appropriate role/permission to add a owner; if
+  // they do the value of true is returned and the owner role assigned.
+  // Else the value of false is returned.
+  boolean addOwner(Uuid user, Uuid conversation, Uuid owner);
+
 }

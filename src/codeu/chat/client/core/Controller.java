@@ -115,6 +115,56 @@ final class Controller implements BasicController {
     return response;
   }
 
+  public boolean addMember(Uuid user, Uuid conversation, Uuid member) {
+
+    boolean response = false;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.ADD_MEMBER_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), user);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+      Uuid.SERIALIZER.write(connection.out(), member);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.ADD_MEMBER_RESPONSE) {
+        response = Serializers.nullable(Serializers.BOOLEAN).read(connection.in());
+        LOG.info("addMember: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
+  public boolean addOwner(Uuid user, Uuid conversation, Uuid owner) {
+
+    boolean response = false;
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.ADD_MEMBER_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), user);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+      Uuid.SERIALIZER.write(connection.out(), owner);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.ADD_MEMBER_RESPONSE) {
+        response = Serializers.nullable(Serializers.BOOLEAN).read(connection.in());
+        LOG.info("addOwner: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return response;
+  }
+
   @Override
   public UserInterest newUserInterest(Uuid owner, Uuid userId) {
 
