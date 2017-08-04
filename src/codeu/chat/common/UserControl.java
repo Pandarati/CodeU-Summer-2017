@@ -56,4 +56,13 @@ public final class UserControl {
         return (this.type == UserType.MEMBER);
     }
 
+    public String toString(){
+        if(isCreator())
+            return "User: " + user + ", role: CREATOR";
+        else if(isOwner())
+            return "User: " + user + ", role: OWNER";
+        else
+            return "User: " + user + ", role: MEMBER";
+    }
+
 }

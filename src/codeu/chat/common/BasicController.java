@@ -70,17 +70,18 @@ public interface BasicController {
   // REMOVE INTEREST (in a User)
   //
   //  Remove an existing interest in a User on the server. The parameter must
-  //  correspond to an existing user or the value of false will be returned.
-  //  If the operation is successful then the interest will be removed from
-  //  the User's list of interests, and true is returned.
+  //  correspond to an existing user interest or the value of false will be
+  //  returned. If the operation is successful then the interest will be
+  //  removed from the User's list of interests, and true is returned.
   boolean removeUserInterest(Uuid owner, Uuid interest);
 
   // REMOVE INTEREST (in a Conversation)
   //
   //  Remove an existing interest in a Conversation on the server. The
-  //  parameter must correspond to an existing conversation or the value of false
-  //  will be returned. If the operation is successful then the interest will be
-  //  removed from the User's list of interests, and true is returned.
+  //  parameter must correspond to an existing conversation interest or
+  //  the value of false will be returned. If the operation is successful
+  //  then the interest will be removed from the User's list of interests,
+  //  and true is returned.
   boolean removeConversationInterest(Uuid owner, Uuid conversation);
 
   // STATUS UPDATE
@@ -105,5 +106,31 @@ public interface BasicController {
   // they do the value of true is returned and the owner role assigned.
   // Else the value of false is returned.
   boolean addOwner(Uuid user, Uuid conversation, Uuid owner);
+
+  // REMOVE MEMBER
+  //
+  //  Remove an existing member of a conversation on the server. The parameter
+  //  must correspond to an existing member of a conversation and the user must
+  //  have the appropriate role/permission or the value of false will be
+  //  returned. If the operation is successful then the member role will be
+  //  removed from the conversation, and true is returned.
+  boolean removeMember(Uuid user, Uuid conversation, Uuid member);
+
+  // REMOVE OWNER
+  //
+  //  Remove an existing owner of a conversation on the server. The parameter
+  //  must correspond to an existing owner of a conversation and the user must
+  //  have the appropriate role/permission or the value of false will be
+  //  returned. If the operation is successful then the owner role will be
+  //  removed from conversation, and true is returned.
+  boolean removeOwner(Uuid user, Uuid conversation, Uuid owner);
+
+  // PERMISSION JOIN CONVERSATION
+  //
+  // Checks whether a user has the permission level to read and write in a
+  // conversation. Only if the user is a member, owner, or creator should
+  // the value true be returned. Otherwise the user is not authorized to
+  // join the conversation and false returned.
+  boolean permissionJoinConversation(Uuid user, Uuid conversation);
 
 }

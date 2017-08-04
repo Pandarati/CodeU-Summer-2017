@@ -368,10 +368,14 @@ public final class Chat {
         final String name = args.size() > 0 ? args.get(0) : "";
         if (name.length() > 0) {
           final ConversationContext conversation = find(name);
-          if (conversation == null) {
+          if (conversation == null ) {
             System.out.format("ERROR: No conversation with name '%s'\n", name);
           } else {
-            panels.push(createConversationPanel(conversation));
+            boolean permission = user.permissionJoinConversation(user.user.id, conversation.conversation.id);
+            if(permission){
+              panels.push(createConversationPanel(conversation));
+            } else
+              System.out.println("ERROR: Permission to join denied");
           }
         } else {
           System.out.println("ERROR: Missing <title>");
@@ -410,7 +414,7 @@ public final class Chat {
     // userI-add (add user interest)
     //
     // Add a command to add a new interest when the user enters
-    // userI-add while on the interest panel.
+    // userI-add while on the user panel.
     //
     // Serena's front end code
     panel.register("userI-add", new Panel.Command() {
@@ -447,7 +451,7 @@ public final class Chat {
     // convI-add (add conversation interest)
     //
     // Add a command to add a new interest when the user enters
-    // convI-add while on the interest panel.
+    // convI-add while on the user panel.
     //
     // Serena's front end code
     panel.register("convI-add", new Panel.Command() {
@@ -482,7 +486,7 @@ public final class Chat {
     // CONVI-REMOVE (remove conversation interest)
     //
     // Add a command to remove an existing convresation interest when the user
-    // enters convI-remove while on the interest panel.
+    // enters convI-remove while on the user panel.
     //
     // Serena's front end code
     panel.register("convI-remove", new Panel.Command() {
@@ -501,7 +505,7 @@ public final class Chat {
     // USERI-REMOVE (remove user interest)
     //
     // Add a command to remove an existing user interest when the user enters
-    // userI-remove while on the interest panel.
+    // userI-remove while on the user panel.
     //
     // Serena's front end code
     panel.register("userI-remove", new Panel.Command() {
@@ -520,7 +524,7 @@ public final class Chat {
     // STATUS-UPDATE (status update for a user's interests)
     //
     // Add a command that lets the user view the update status on their
-    // interests when the use types status-update while on the interest panel.
+    // interests when the use types status-update while on the user panel.
     //
     // Serena's front end code
     panel.register("status-update", new Panel.Command() {
@@ -618,6 +622,78 @@ public final class Chat {
           //updateInterests();
         } else {
           System.out.println("ERROR: Messages must contain text");
+        }
+      }
+    });
+
+    // MEMBER-ADD (add message)
+    //
+    // Add a command to add a new member to the current conversation when the
+    // user enters "member-add" while on the conversation panel.
+    //
+    panel.register("member-add", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String member = args.size() > 0 ? args.get(0) : "";
+        if (member.length() > 0) {
+          if(!conversation.addMember(member))
+            System.out.println("ERROR: Member failed to be added");
+        } else {
+          System.out.println("ERROR: Command must contain text");
+        }
+      }
+    });
+
+    // OWNER-ADD (add message)
+    //
+    // Add a command to add a new owner to the current conversation when the
+    // user enters "owner-add" while on the conversation panel.
+    //
+    panel.register("owner-add", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String owner = args.size() > 0 ? args.get(0) : "";
+        if (owner.length() > 0) {
+          if(!conversation.addOwner(owner))
+            System.out.println("ERROR: Owner failed to be added");
+        } else {
+          System.out.println("ERROR: Command must contain text");
+        }
+      }
+    });
+
+    // MEMBER-REMOVE (remove member)
+    //
+    // Add a command to remove an existing member of the conversation when
+    // the user enters "member-remove" while on the conversation panel.
+    //
+    panel.register("member-remove", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String name = args.size() > 0 ? args.get(0) : "";
+        if (name.length() > 0 ) {
+          if (!conversation.removeMember(name))
+            System.out.println("ERROR: Member failed to be removed");
+        } else {
+          System.out.println("ERROR: Enter valid user name");
+        }
+      }
+    });
+
+    // OWNER-REMOVE (remove owner)
+    //
+    // Add a command to remove an existing owner of the conversation when
+    // the user enters "owner-remove" while on the conversation panel.
+    //
+    panel.register("owner-remove", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final String name = args.size() > 0 ? args.get(0) : "";
+        if (name.length() > 0 ) {
+          if (!conversation.removeOwner(name))
+            System.out.println("ERROR: Owner failed to be removed");
+        } else {
+          System.out.println("ERROR: Enter valid user name");
         }
       }
     });

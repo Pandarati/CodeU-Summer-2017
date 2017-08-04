@@ -78,6 +78,53 @@ public final class ConversationContext {
         getMessage(updated.lastMessage);
   }
 
+  public boolean addMember(String name) {
+    User member = findUser(name);
+    if (member == null)
+      return false;
+    else {
+      return controller.addMember(user.id, conversation.id, member.id);
+    }
+  }
+
+  public boolean addOwner(String name) {
+    User owner = findUser(name);
+    if (owner == null)
+      return false;
+    else {
+      return controller.addOwner(user.id, conversation.id, owner.id);
+    }
+  }
+
+  public boolean removeMember(String name) {
+    User member = findUser(name);
+    if (member == null)
+      return false;
+    else {
+      return controller.removeMember(user.id, conversation.id, member.id);
+    }
+  }
+
+  public boolean removeOwner(String name) {
+    User owner = findUser(name);
+    if (owner == null)
+      return false;
+    else {
+      return controller.removeOwner(user.id, conversation.id, owner.id);
+    }
+  }
+
+  // Find the first user by entered name
+  private User findUser(String name) {
+    for (final User other : view.getUsers()) {
+      String otherName = other.name;
+      if (name.equals(otherName)) {
+        return other;
+      }
+    }
+    return null;
+  }
+
   private ConversationPayload getUpdated() {
     final Collection<Uuid> ids = Arrays.asList(conversation.id);
     final Iterator<ConversationPayload> payloads = view.getConversationPayloads(ids).iterator();
