@@ -305,6 +305,8 @@ public final class Chat {
         System.out.println("    status-update");
         System.out.println("      Get a status update on a user and their activity.");
         System.out.println(" ");
+        System.out.println("  Access Control Commands: ");
+        System.out.println(" ");
         System.out.println("  General Commands: ");
         System.out.println("    info");
         System.out.println("      Display all info for the current user");
@@ -566,6 +568,9 @@ public final class Chat {
     panel.register("help", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
+
+
+
         System.out.println("USER MODE");
         System.out.println(" ");
         System.out.println("  Message Commands: ");
@@ -576,12 +581,26 @@ public final class Chat {
         System.out.println("    info");
         System.out.println("      Display all info about the current conversation.");
         System.out.println(" ");
+        System.out.println("  Access Control Commands: ");
+        System.out.println("    member-add [user name]");
+        System.out.println("      Add a member to the conversation");
+        System.out.println("    owner-add [user name]");
+        System.out.println("      Add a owner to the conversation");
+        System.out.println(" ");
         System.out.println("  General Commands: ");
         System.out.println("    back");
         System.out.println("      Go back to USER MODE.");
         System.out.println("    exit");
         System.out.println("      Exit the program.");
         System.out.println(" ");
+
+        /**
+         * member-add
+         * owner-add
+         *
+         * member-remove
+         * owner-remove
+         */
       }
     });
 
