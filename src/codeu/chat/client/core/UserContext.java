@@ -52,6 +52,10 @@ public final class UserContext {
     return all;
   }
 
+  public boolean permissionJoinConversation(Uuid user, Uuid conversation) {
+    return controller.permissionJoinConversation(user, conversation);
+  }
+
   public UserInterest addUserInterest(String name) {
     User other = findUser(name);
     if (other == null)

@@ -150,6 +150,81 @@ public final class Server {
       }
     });
 
+    // Add Member - A creator or owner wants to add a new member to a conversation.
+    this.commands.put(NetworkCode.ADD_MEMBER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final Uuid member = Uuid.SERIALIZER.read(in);
+        final boolean added = controller.addMember(user, conversationId, member);
+
+        Serializers.INTEGER.write(out, NetworkCode.ADD_MEMBER_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, added);
+      }
+    });
+
+    // Add Owner - A creator wants to add a new owner to a conversation.
+    this.commands.put(NetworkCode.ADD_OWNER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final Uuid owner = Uuid.SERIALIZER.read(in);
+        final boolean added = controller.addOwner(user, conversationId, owner);
+
+        Serializers.INTEGER.write(out, NetworkCode.ADD_OWNER_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, added);
+
+      }
+    });
+
+    // Remove Member - A client wants to remove a member from a conversation from the back end
+    this.commands.put(NetworkCode.REMOVE_MEMBER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final Uuid member = Uuid.SERIALIZER.read(in);
+        final boolean removed = controller.removeMember(user, conversationId, member);
+
+        Serializers.INTEGER.write(out, NetworkCode.REMOVE_MEMBER_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, removed);
+      }
+    });
+
+    // Remove Owner - A client wants to remove an owner from a conversation from the back end
+    this.commands.put(NetworkCode.REMOVE_OWNER_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversationId = Uuid.SERIALIZER.read(in);
+        final Uuid owner = Uuid.SERIALIZER.read(in);
+        final boolean removed = controller.removeOwner(user, conversationId, owner);
+
+        Serializers.INTEGER.write(out, NetworkCode.REMOVE_OWNER_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, removed);
+      }
+    });
+
+    // Permission Join Conversation - A client checks if they have permission to join a conversation.
+    this.commands.put(NetworkCode.PERMISSION_JOIN_CONVERSATION_REQUEST,  new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid user = Uuid.SERIALIZER.read(in);
+        final Uuid conversation = Uuid.SERIALIZER.read(in);
+        final boolean permission = controller.permissionJoinConversation(user, conversation);
+
+        Serializers.INTEGER.write(out, NetworkCode.PERMISSION_JOIN_CONVERSATION_RESPONSE);
+        Serializers.nullable(Serializers.BOOLEAN).write(out, permission);
+      }
+    });
+
     // New Interest - A client wants to add a new interest in a user to the back end.
     this.commands.put(NetworkCode.NEW_USER_INTEREST_REQUEST,  new Command() {
         @Override
